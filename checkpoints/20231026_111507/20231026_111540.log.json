@@ -1,0 +1,21 @@
+{"tool": "MMEdu0.1.22", "task": "Classification", "backbone": "LeNet", "device": "cpu", "dataset_size": 896, "learning_rate": 0.01, "hook_msgs": {}}
+{"mode": "val", "epoch": 1, "iter": 1, "lr": 0.01, "accuracy_top-1": 50.89286}
+{"mode": "val", "epoch": 2, "iter": 1, "lr": 0.01, "accuracy_top-1": 50.89286}
+{"mode": "val", "epoch": 3, "iter": 1, "lr": 0.01, "accuracy_top-1": 50.89286}
+{"mode": "val", "epoch": 4, "iter": 1, "lr": 0.01, "accuracy_top-1": 51.78571}
+{"mode": "val", "epoch": 5, "iter": 1, "lr": 0.01, "accuracy_top-1": 58.03571}
+{"mode": "val", "epoch": 6, "iter": 1, "lr": 0.01, "accuracy_top-1": 62.5}
+{"mode": "val", "epoch": 7, "iter": 1, "lr": 0.01, "accuracy_top-1": 67.85714}
+{"mode": "val", "epoch": 8, "iter": 1, "lr": 0.01, "accuracy_top-1": 69.64285}
+{"mode": "val", "epoch": 9, "iter": 1, "lr": 0.01, "accuracy_top-1": 69.64285}
+{"mode": "val", "epoch": 10, "iter": 1, "lr": 0.01, "accuracy_top-1": 73.21429}
+{"mode": "val", "epoch": 11, "iter": 1, "lr": 0.01, "accuracy_top-1": 81.25}
+{"mode": "val", "epoch": 12, "iter": 1, "lr": 0.01, "accuracy_top-1": 81.25}
+{"mode": "val", "epoch": 13, "iter": 1, "lr": 0.01, "accuracy_top-1": 81.25}
+{"mode": "val", "epoch": 14, "iter": 1, "lr": 0.01, "accuracy_top-1": 81.25}
+{"mode": "val", "epoch": 15, "iter": 1, "lr": 0.01, "accuracy_top-1": 80.35714}
+{"mode": "val", "epoch": 16, "iter": 1, "lr": 0.001, "accuracy_top-1": 79.46429}
+{"mode": "val", "epoch": 17, "iter": 1, "lr": 0.001, "accuracy_top-1": 78.57143}
+{"mode": "val", "epoch": 18, "iter": 1, "lr": 0.001, "accuracy_top-1": 79.46429}
+{"mode": "val", "epoch": 19, "iter": 1, "lr": 0.001, "accuracy_top-1": 79.46429}
+{"mode": "val", "epoch": 20, "iter": 1, "lr": 0.001, "accuracy_top-1": 78.57143}

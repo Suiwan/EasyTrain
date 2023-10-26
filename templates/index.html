@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="static/css/style.css">
+    <title>全屏手动轮播</title>
+</head>
+
+<body>
+
+
+
+    <!-- 轮播页面 -->
+    <div class="slider">
+        <div class="slide" style="background-color: #ff5733;">
+            <h1 class="title">EasyDL2.0</h1>
+            <button id="thread-test-btn">测试线程</button>
+            <h3>当前选择的任务是：{{task}}</h3>
+            <form id="task-select-form">
+                <label for="task-select-option">选择您要完成的任务：</label>
+                <select id="task-select-option" name="option">
+                    <option value="classification">分类任务</option>
+                    <option value="detection">检测任务</option>
+                    <option value="others">其他任务</option>
+                </select>
+                <button type="submit">提交</button>
+            </form>
+        </div>
+        <div class="slide" style="background-color: #095a187e;">
+            <h1 class="title">EasyDL2.0</h1>
+        </div>
+        <div class="slide" style="background-color: #5733ff;">
+            <h1 class="title">EasyDL2.0</h1>
+        </div>
+        <div class="slide" style="background-color: #ff5733;">
+            <h1 class="title">EasyDL2.0</h1>
+        </div>
+    </div>
+    <!-- 轮播控制点 -->
+    <div class="dots">
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+        <span class="dot"></span>
+    </div>
+    <script src="static/js/script.js"></script>
+</body>
+
+</html>

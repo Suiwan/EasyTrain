@@ -1,0 +1,8 @@
+{"tool": "MMEdu0.1.22", "task": "Classification", "backbone": "LeNet", "device": "cpu", "dataset_size": 2520, "learning_rate": 0.01, "hook_msgs": {}}
+{"mode": "train", "epoch": 1, "iter": 10, "lr": 0.01, "data_time": 2.52073, "loss": 1.09297, "time": 2.52858}
+{"mode": "train", "epoch": 1, "iter": 20, "lr": 0.01, "data_time": 0.0067, "loss": 1.09127, "time": 0.01587}
+{"mode": "train", "epoch": 1, "iter": 30, "lr": 0.01, "data_time": 0.00681, "loss": 1.0832, "time": 0.01375}
+{"mode": "train", "epoch": 1, "iter": 40, "lr": 0.01, "data_time": 0.00749, "loss": 1.06557, "time": 0.01478}
+{"mode": "train", "epoch": 1, "iter": 50, "lr": 0.01, "data_time": 0.0071, "loss": 1.05795, "time": 0.01459}
+{"mode": "train", "epoch": 1, "iter": 60, "lr": 0.01, "data_time": 0.0065, "loss": 1.02666, "time": 0.01449}
+{"mode": "train", "epoch": 1, "iter": 70, "lr": 0.01, "data_time": 0.00563, "loss": 1.02724, "time": 0.01496}
