@@ -185,7 +185,7 @@ $(document).ready(function () {
     $('#myCarousel').on('slid.bs.carousel', function () {
         var currentIndex = $('#myCarousel .active').index();
         if (currentIndex == 2) {
-            fetch('/get_local_dataset')
+            fetch('/mmedu/get_local_dataset')
                 .then(response => response.json())
                 .then(data => {
                     // 处理成功响应
@@ -269,7 +269,7 @@ document.getElementById('dataset-submit-btn').addEventListener('click', function
 // 点击生成代码
 document.getElementById('code-generate-btn').addEventListener('click', function () {
     // 发送POST请求到Flask后端
-    fetch('/get_code', {
+    fetch('/mmedu/get_code', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -321,7 +321,7 @@ document.getElementById("train_cfg_form").addEventListener("submit", function (e
 
     var formData = new FormData(this);
 
-    fetch('/set_base_cfg', {
+    fetch('/mmedu/set_base_cfg', {
         method: 'POST',
         body: formData
     })
@@ -359,7 +359,7 @@ document.getElementById("advset-submit-btn").addEventListener("click", function 
         "pretrained_model": pretrained
     };
     console.log(requestData);
-    fetch('/set_advance_cfg', {
+    fetch('/mmedu/set_advance_cfg', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -441,7 +441,7 @@ document.getElementById('stop-train-btn').addEventListener('click', function () 
 
 // 轮询线程状态
 function pollThreadStatus() {
-    fetch('/get_message', {
+    fetch('/mmedu/get_message', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -469,7 +469,7 @@ var G_checkpoints_path = "";
 
 function get_epoch(){
     // 从后端获取总epoch
-    fetch('/get_epoch', {
+    fetch('/mmedu/get_epoch', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -489,7 +489,7 @@ function get_checkpoints_path(){
 
     var checkpoints_path = "";
     // 从后端获取checkpoints_path
-    fetch('/get_checkpoints_path', {
+    fetch('/mmedu/get_checkpoints_path', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -652,7 +652,7 @@ steps.forEach((step, index) => {
 
 // 当点击设置其他参数
 document.getElementById('set-other-params-btn').addEventListener('click', function () {
-    fetch('/get_local_pretrained_model', {
+    fetch('/mmedu/get_local_pretrained_model', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
