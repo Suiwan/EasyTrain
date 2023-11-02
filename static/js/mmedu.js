@@ -400,7 +400,7 @@ document.getElementById('start-train-btn').addEventListener('click', function ()
     get_epoch();
     // 构建请求数据
     // 发送POST请求到Flask后端
-    fetch('/start_thread', {
+    fetch('/mmedu/start_thread', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -416,7 +416,7 @@ document.getElementById('start-train-btn').addEventListener('click', function ()
 
 // 点击结束训练按钮，发送请求到后端
 document.getElementById('stop-train-btn').addEventListener('click', function () {
-    fetch('/stop_thread', {
+    fetch('/mmedu/stop_thread', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
@@ -569,7 +569,7 @@ socket.on('log', (log) => {
 
         if (mode == "val" && epoch==G_totalEpoch){
             console.log("应该停止训练模型了");
-            fetch('/stop_thread', {
+            fetch('/mmedu/stop_thread', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'

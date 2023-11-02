@@ -137,10 +137,10 @@ def update_pretrained_path(pretrained_model):
         global_varibles['pretrained_path'] = None
         return
     if global_varibles['task'] == 'classification':
-        pretrained_path = pwd + "\\checkpoints\\cls_model\\" + global_varibles['dataset'] + "\\" + pretrained_model
+        pretrained_path = pwd + "\\checkpoints\\mmedu_cls_model\\" + global_varibles['dataset'] + "\\" + pretrained_model
         global_varibles['pretrained_path'] = pretrained_path
     elif global_varibles['task'] == 'detection':
-        pretrained_path = pwd + "\\checkpoints\\det_model\\" + global_varibles['dataset'] + "\\" + pretrained_model
+        pretrained_path = pwd + "\\checkpoints\\mmedu_det_model\\" + global_varibles['dataset'] + "\\" + pretrained_model
         global_varibles['pretrained_path'] = pretrained_path
 
 
@@ -184,7 +184,7 @@ def generate_code():
         entry_part = "if __name__ == '__main__':"+"\n"+"\t"+"generated_train()"+"\n"
         full_code = import_part + def_part + construct_part + class_part + dataset_part + save_part + train_part + entry_part
         with current_app.app_context():
-            with open("generated_code.py","w") as f:
+            with open("mmedu_code.py","w") as f:
                 f.write(full_code)
     print("生成代码：",full_code)
     return full_code

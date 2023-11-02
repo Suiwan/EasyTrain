@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/basenn.css')}}">
     <!-- 引入 Bootstrap CSS -->
     <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='js/highlight/styles/github.min.css')}}">
@@ -14,10 +15,10 @@
 <body>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" href="/">MMEdu</a>
+          <a class="nav-link " href="/">MMEdu</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="/basenn">BaseNN</a>
+          <a class="nav-link active" href="/basenn">BaseNN</a>
         </li>
       </ul>
     <!-- 使用 Bootstrap 轮播组件 -->
@@ -28,10 +29,10 @@
             <li data-target="#myCarousel" data-slide-to="1"></li>
             <li data-target="#myCarousel" data-slide-to="2"></li>
             <li data-target="#myCarousel" data-slide-to="3"></li>
-            <li data-target="#myCarousel" data-slide-to="4"></li>
         </ul>
         <!-- 轮播图片 -->
         <div class="carousel-inner">
+            <!-- 数据集选择页面 -->
             <div class="carousel-item active" style="background-color: #095a187e;">
                 <!-- <h1 class="title">Easy Train</h1> -->
                 <div class="steps">
@@ -42,34 +43,24 @@
                             <span class="step-num">1</span>
                         </div>
                         <div class="step-text">
-                            <span>任务选择</span>
-                        </div>
-                    </div>
-                    <!-- 第二部分 -->
-                    <div class="step">
-                        <div class="step-progress">
-                            <div class="step-line"></div>
-                            <span class="step-num">2</span>
-                        </div>
-                        <div class="step-text">
-                            <span>模型选择</span>
+                            <span>数据集选择</span>
                         </div>
                     </div>
                     <!-- 第三部分 -->
                     <div class="step">
                         <div class="step-progress">
                             <div class="step-line"></div>
-                            <span class="step-num">3</span>
+                            <span class="step-num">2</span>
                         </div>
                         <div class="step-text">
-                            <span>数据集选择</span>
+                            <span>模型搭建</span>
                         </div>
                     </div>
                     <!-- 第四部分 -->
                     <div class="step">
                         <div class="step-progress ">
                             <div class="step-line"></div>
-                            <span class="step-num">4</span>
+                            <span class="step-num">3</span>
                         </div>
                         <div class="step-text">
                             <span>参数设置</span>
@@ -78,151 +69,7 @@
                     <div class="step">
                         <div class="step-progress right">
                             <div class="step-line"></div>
-                            <span class="step-num">5</span>
-                        </div>
-                        <div class="step-text">
-                            <span>开始训练</span>
-                        </div>
-                    </div>
-                </div>
-                <h3 class="subtitle">当前选择的任务是：{{task}}</h3>
-                <div class="container mt-3 position-relative">
-                    <form id="task-select-form">
-                        <label  class="label-select">选择您要完成的任务：</label>
-                        <div class="mb-3">
-                            <select class="form-select form-control" id="task-select" name="task">
-                                <option value="classification">分类任务</option>
-                                <option value="detection">检测任务</option>
-                                <option value="others">其他任务</option>
-                            </select>
-                        </div>
-                        <!-- 使用 Bootstrap 按钮来触发模态框 -->
-                        <button type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal" id="task-submit-btn">
-                            提交
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <div class="carousel-item" style="background-color: #095a187e;" > 
-                <!-- <h1 class="title">Easy Train</h1> -->
-                <div class="steps">
-                    <!-- 第一部分 -->
-                    <div class="step">
-                        <div class="step-progress left done">
-                            <div class="step-line"></div>
-                            <span class="step-num">1</span>
-                        </div>
-                        <div class="step-text">
-                            <span>任务选择</span>
-                        </div>
-                    </div>
-                    <!-- 第二部分 -->
-                    <div class="step">
-                        <div class="step-progress done">
-                            <div class="step-line"></div>
-                            <span class="step-num">2</span>
-                        </div>
-                        <div class="step-text">
-                            <span>模型选择</span>
-                        </div>
-                    </div>
-                    <!-- 第三部分 -->
-                    <div class="step">
-                        <div class="step-progress">
-                            <div class="step-line"></div>
-                            <span class="step-num">3</span>
-                        </div>
-                        <div class="step-text">
-                            <span>数据集选择</span>
-                        </div>
-                    </div>
-                    <!-- 第四部分 -->
-                    <div class="step">
-                        <div class="step-progress ">
-                            <div class="step-line"></div>
                             <span class="step-num">4</span>
-                        </div>
-                        <div class="step-text">
-                            <span>参数设置</span>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-progress right">
-                            <div class="step-line"></div>
-                            <span class="step-num">5</span>
-                        </div>
-                        <div class="step-text">
-                            <span>开始训练</span>
-                        </div>
-                    </div>
-                </div>
-                <h3 class="subtitle">当前选择的模型是：{{model}}</h3>
-                <div class="container mt-3 position-relative">
-                    <form id="model-select-form">
-                        <label  class="label-select">选择您要使用的模型：</label>
-                        <div class="mb-3">
-                            <select class="form-select form-control" id="model-select" name="model">
-                                <option value="LeNet">LeNet</option>
-                                <option value="MobileNet">MobileNet</option>
-                                <option value="ResNet18">ResNet18</option>
-                                <option value="ResNet50">ResNet50</option>
-                            </select>
-                        </div>
-                        <button type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal" id="model-submit-btn">
-                            提交
-                        </button>
-                    </form>
-                </div>
-            </div>
-            <!-- 数据集选择页面 -->
-            <div class="carousel-item" style="background-color: #095a187e;">
-                <!-- <h1 class="title">Easy Train</h1> -->
-                <!-- 下拉选择框，选择要进行训练的数据集 -->
-                <div class="steps">
-                    <!-- 第一部分 -->
-                    <div class="step">
-                        <div class="step-progress left done">
-                            <div class="step-line"></div>
-                            <span class="step-num">1</span>
-                        </div>
-                        <div class="step-text">
-                            <span>任务选择</span>
-                        </div>
-                    </div>
-                    <!-- 第二部分 -->
-                    <div class="step">
-                        <div class="step-progress done">
-                            <div class="step-line"></div>
-                            <span class="step-num">2</span>
-                        </div>
-                        <div class="step-text">
-                            <span>模型选择</span>
-                        </div>
-                    </div>
-                    <!-- 第三部分 -->
-                    <div class="step">
-                        <div class="step-progress done">
-                            <div class="step-line"></div>
-                            <span class="step-num">3</span>
-                        </div>
-                        <div class="step-text">
-                            <span>数据集选择</span>
-                        </div>
-                    </div>
-                    <!-- 第四部分 -->
-                    <div class="step">
-                        <div class="step-progress ">
-                            <div class="step-line"></div>
-                            <span class="step-num">4</span>
-                        </div>
-                        <div class="step-text">
-                            <span>参数设置</span>
-                        </div>
-                    </div>
-                    <div class="step">
-                        <div class="step-progress right">
-                            <div class="step-line"></div>
-                            <span class="step-num">5</span>
                         </div>
                         <div class="step-text">
                             <span>开始训练</span>
@@ -243,6 +90,58 @@
                     </form>
                 </div>
             </div>
+            <!-- 模型搭建页面 -->
+            <div class="carousel-item" style="background-color: #095a187e;">
+                <div class="steps">
+                    <!-- 第一部分 -->
+                    <div class="step">
+                        <div class="step-progress left done">
+                            <div class="step-line"></div>
+                            <span class="step-num">1</span>
+                        </div>
+                        <div class="step-text">
+                            <span>数据集选择</span>
+                        </div>
+                    </div>
+                    <!-- 第三部分 -->
+                    <div class="step">
+                        <div class="step-progress done">
+                            <div class="step-line"></div>
+                            <span class="step-num">2</span>
+                        </div>
+                        <div class="step-text">
+                            <span>模型搭建</span>
+                        </div>
+                    </div>
+                    <!-- 第四部分 -->
+                    <div class="step">
+                        <div class="step-progress ">
+                            <div class="step-line"></div>
+                            <span class="step-num">3</span>
+                        </div>
+                        <div class="step-text">
+                            <span>参数设置</span>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-progress right">
+                            <div class="step-line"></div>
+                            <span class="step-num">4</span>
+                        </div>
+                        <div class="step-text">
+                            <span>开始训练</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="network-container">
+                    
+                    <button id="addLayer" class="btn btn-light btn-lg" >添加神经网络层</button>
+                    <button id="network-submit-btn" class="btn btn-light btn-lg" style="display: block;" data-toggle="modal" data-target="#myModal2">保存</button>
+                    <div class="network">
+                    </div>
+                </div>
+               
+            </div>
             <!-- 参数设置和代码生成页面 -->
             <div class="carousel-item" style="background-color: #095a187e;">
                 <!-- <h1 class="title">Easy Train</h1> -->
@@ -254,34 +153,24 @@
                             <span class="step-num">1</span>
                         </div>
                         <div class="step-text">
-                            <span>任务选择</span>
-                        </div>
-                    </div>
-                    <!-- 第二部分 -->
-                    <div class="step">
-                        <div class="step-progress done">
-                            <div class="step-line"></div>
-                            <span class="step-num">2</span>
-                        </div>
-                        <div class="step-text">
-                            <span>模型选择</span>
+                            <span>数据集选择</span>
                         </div>
                     </div>
                     <!-- 第三部分 -->
                     <div class="step">
                         <div class="step-progress done">
                             <div class="step-line"></div>
-                            <span class="step-num">3</span>
+                            <span class="step-num">2</span>
                         </div>
                         <div class="step-text">
-                            <span>数据集选择</span>
+                            <span>模型搭建</span>
                         </div>
                     </div>
                     <!-- 第四部分 -->
                     <div class="step">
                         <div class="step-progress done">
                             <div class="step-line"></div>
-                            <span class="step-num">4</span>
+                            <span class="step-num">3</span>
                         </div>
                         <div class="step-text">
                             <span>参数设置</span>
@@ -290,7 +179,7 @@
                     <div class="step">
                         <div class="step-progress right">
                             <div class="step-line"></div>
-                            <span class="step-num">5</span>
+                            <span class="step-num">4</span>
                         </div>
                         <div class="step-text">
                             <span>开始训练</span>
@@ -307,24 +196,24 @@
                             <form  method="post" id="train_cfg_form">
                                 <ul class="list-group list-group-flush">
                                     <li class="list-group-item">
-                                        <label class="card-text"  for="lr">学习率：</label>
+                                        <label class="card-text" >学习率：</label>
                                     <input type="text" class="form-control"  name="lr" id="lr" placeholder="例如：0.001" value="0.01">
                                     </li>
-                                    <li class="list-group-item">
+                                    <!-- <li class="list-group-item">
                                         <label class="card-text" for="batch_size">批次大小：</label>
                                     <input type="text"  class="form-control" name="batch_size" id="batch_size" placeholder="例如：32" value="32">
+                                    </li> -->
+                                    <li class="list-group-item" >
+                                        <label  class="card-text">训练轮数：</label>
+                                    <input type="text"  class="form-control" name="epochs" id="epochs" placeholder="例如：10" value="10"> 
                                     </li>
                                     <li class="list-group-item">
-                                        <label for="epoch" class="card-text">训练轮数：</label>
-                                    <input type="text"  class="form-control" name="epoch" id="epoch" placeholder="例如：10" value="10"> 
-                                    </li>
-                                    <li class="list-group-item">
-                                        <label for="random_seed" class="card-text">随机种子：</label>
+                                        <label  class="card-text">随机种子：</label>
                                     <input type="text"  class="form-control" name="random_seed" id="random_seed" placeholder="例如：42" value="42">
                                     </li>
                                 </ul>
                                 <div class="card-footer" style="padding: 0.5rem 1rem; width: 20rem;">
-                                    <input type="submit" value="提交" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal2" id="cfg-submit-btn">
+                                    <input type="submit" value="提交" class="btn btn-light btn-lg"  id="cfg-submit-btn">
                                 </div>
                             </form>
                         </div>
@@ -364,34 +253,24 @@
                             <span class="step-num">1</span>
                         </div>
                         <div class="step-text">
-                            <span>任务选择</span>
-                        </div>
-                    </div>
-                    <!-- 第二部分 -->
-                    <div class="step">
-                        <div class="step-progress done">
-                            <div class="step-line"></div>
-                            <span class="step-num">2</span>
-                        </div>
-                        <div class="step-text">
-                            <span>模型选择</span>
+                            <span>数据集选择</span>
                         </div>
                     </div>
                     <!-- 第三部分 -->
                     <div class="step">
                         <div class="step-progress done">
                             <div class="step-line"></div>
-                            <span class="step-num">3</span>
+                            <span class="step-num">2</span>
                         </div>
                         <div class="step-text">
-                            <span>数据集选择</span>
+                            <span>模型搭建</span>
                         </div>
                     </div>
                     <!-- 第四部分 -->
                     <div class="step">
                         <div class="step-progress done">
                             <div class="step-line"></div>
-                            <span class="step-num">4</span>
+                            <span class="step-num">3</span>
                         </div>
                         <div class="step-text">
                             <span>参数设置</span>
@@ -400,7 +279,7 @@
                     <div class="step">
                         <div class="step-progress right done">
                             <div class="step-line"></div>
-                            <span class="step-num">5</span>
+                            <span class="step-num">4</span>
                         </div>
                         <div class="step-text">
                             <span>开始训练</span>
@@ -464,6 +343,24 @@
             <div class="modal-content">
                 <!-- 模态框头部 -->
                 <div class="modal-header">
+                    <h4 class="modal-title">保存成功</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-message">模型网络结构已成功保存。</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary modal-close-btn" data-dismiss="modal" id="btn-modal-close2">关闭</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="myModal3">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- 模态框头部 -->
+                <div class="modal-header">
                     <h4 class="modal-title">设置成功</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
@@ -477,7 +374,7 @@
         </div>
     </div>
 
-<!-- 更多参数设置——todo：epoch间隔等 -->
+<!-- 更多参数设置 -->
     <div class="modal" id="cfgModal" aria-labelledby="cfgModalLabel" aria-hidden="true" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -490,32 +387,28 @@
               <div class="modal-body">
                  <div class="input-group mb-3" id="cfgAdcanceSet">
                     <ul class="list-group">
-                        <li class="list-group-item" style="width: 450px;">
-                            <label class="card-text" style="font-size: 18px;">分类数量
-                            <img src="{{url_for('static',filename='assets/question-diamond.svg')}}" style="width: 20px;height: 20px;" type="button" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" > </label>
-                            <input type="text" class="form-control" id="classNum" placeholder="例如：2">
-                        </li>
-                        <li class="list-group-item">
-                        <label class="card-text" style="font-size: 18px;">优化器</label>   
-                        <select class="form-select form-control" id="optimizer-select" name="optimizer">
-                            <option value="SGD">SGD</option>
-                            <option value="Adam">Adam</option>
-                        </select>
-                        </li>
-                        <li class="list-group-item">
-                            <label class="card-text" style="font-size: 18px;">权重衰减</label>
-                            <input type="text" class="form-control" id="weight-decay" placeholder="例如：0.001">
-                        </li>
-                        <li class="list-group-item">
-                            <label class="card-text" style="font-size: 18px;">设备</label>
-                            <select class="form-select form-control" id="device-select" name="device">
-                                <option value="cpu">cpu</option>
-                                <option value="cuda">cuda</option>
+                        <li class="list-group-item" id="adv-item">
+                            <label class="card-text" style="font-size: 18px;">评估指标</label>
+                            <select class="form-select form-control" id="metrics-select" name="metrics">
+                                <option value="acc">accuracy</option>
+                                <option value="mae">mae</option>
+                                <option value="mse">mse</option>
                             </select>
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item" id="adv-item">
+                            <label class="card-text" style="font-size: 18px;">损失函数</label>
+                            <select class="form-select form-control" id="loss-select" name="loss">
+                                <option value="CrossEntropyLoss">CrossEntropyLoss</option>
+                                <option value="L1Loss">L1Loss</option>
+                                <option value="MSELoss">MSELoss</option>
+                                <!-- BCELoss -->
+                                <option value="BCELoss">BCELoss</option>
+                            </select>
+                        </li>
+                        <li class="list-group-item" id="adv-item">
                             <label class="card-text" style="font-size: 18px;">预训练模型</label>
                             <select class="form-select form-control" id="pretrained-select" name="pretrained">
+                                <option value="None">不使用预训练模型</option>
                             </select>
                         </li>
                     </ul>
@@ -556,8 +449,11 @@
     <script src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
     <script src="{{url_for('static',filename='js/echarts.min.js')}}"></script>
     <script src="{{url_for('static',filename='js/clipboard.min.js')}}"></script>
-    <script src="{{url_for('static',filename='js/script.js')}}"></script>
+    <script src="{{url_for('static',filename='js/leader-line.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/basenn.js')}}"></script>
     <script src="{{url_for('static',filename='js/highlight/highlight.min.js')}}"></script>
+
+
 
 </body>
 

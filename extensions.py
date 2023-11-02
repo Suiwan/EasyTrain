@@ -3,15 +3,17 @@ from flask_socketio import SocketIO
 from flask_cors import CORS
 import os
 
-app = Flask(__name__,static_url_path='/static')
 
 from apis.mmedu import mmedu_bp
+from apis.basenn import basenn_bp
+app = Flask(__name__,static_url_path='/static')
 
 CORS(app)
 
 socketio = SocketIO(app,cors_allowed_origins="*")
 
 app.register_blueprint(mmedu_bp)
+app.register_blueprint(basenn_bp)
 
 
 def back2pwd(pwd,level):

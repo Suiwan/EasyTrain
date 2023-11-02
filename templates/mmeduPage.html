@@ -4,10 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="static/css/style.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/style.css')}}">
     <!-- 引入 Bootstrap CSS -->
-    <link rel="stylesheet" href="static/css/bootstrap.min.css">
-    <link rel="stylesheet" href="static/css/github.min.css">
+    <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{url_for('static',filename='js/highlight/styles/github.min.css')}}">
     <title>EasyDL2.0</title>
 </head>
 
@@ -349,7 +349,7 @@
                 </button>
 
                 <button type="button" id="code-copy-btn" data-clipboard-target = ".python" data-toggle="tooltip" data-placement="top" title="copied!" data-trigger="manual" >
-                    <img src="static/assets/clipboard-plus.svg" alt="Copy to clipboard" style="width: 25px;height: 25px;">
+                    <img src="{{url_for('static',filename='assets/clipboard-plus.svg')}}" alt="Copy to clipboard" style="width: 25px;height: 25px;">
                 </button>
             </div>
 
@@ -492,7 +492,7 @@
                     <ul class="list-group">
                         <li class="list-group-item" style="width: 450px;">
                             <label class="card-text" style="font-size: 18px;">分类数量
-                            <img src="static/assets/question-diamond.svg" style="width: 20px;height: 20px;" type="button" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" > </label>
+                            <img src="{{url_for('static',filename='assets/question-diamond.svg')}}" style="width: 20px;height: 20px;" type="button" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" > </label>
                             <input type="text" class="form-control" id="classNum" placeholder="例如：2">
                         </li>
                         <li class="list-group-item">
@@ -551,13 +551,13 @@
 
 
     <!-- 引入 Bootstrap JavaScript -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
-    <script src="static/js/jquery-3.7.1.slim.min.js"></script>
-    <script src="static/js/bootstrap.bundle.min.js"></script>
-    <script src="static/js/echarts.min.js"></script>
-    <script src="static/js/clipboard.min.js"></script>
-    <script src="static/js/script.js"></script>
-    <script src="static/js/highlight/highlight.min.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/socket.io/4.0.0/socket.io.js"></script>
+    <script src="{{url_for('static',filename='js/jquery-3.7.1.slim.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/bootstrap.bundle.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/echarts.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/clipboard.min.js')}}"></script>
+    <script src="{{url_for('static',filename='js/mmedu.js')}}"></script>
+    <script src="{{url_for('static',filename='js/highlight/highlight.min.js')}}"></script>
 
 </body>
 

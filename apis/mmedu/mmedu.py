@@ -1,10 +1,7 @@
 from . import mmedu_bp
 from flask import render_template, request, jsonify
 from .config import *
-import subprocess
-import time
 import json
-
 
 
 
@@ -19,15 +16,10 @@ def back2pwd(pwd,level):
 
 
 
-@mmedu_bp.route('/test')
-def test():
-    return 'mmedu test'
-
-
 
 @mmedu_bp.route('/index')
 def index():
-    return render_template('train_page.html',
+    return render_template('mmeduPage.html',
                         task = global_varibles["task"],
                         model = global_varibles["model"],
                         lr = global_varibles["lr"],
