@@ -1,3 +1,5 @@
 
 # 忽略.pth文件
 global-exclude *.pth
+# 忽略checkpoints文件夹中的所有文件
+global-exclude checkpoints/*
