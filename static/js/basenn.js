@@ -1,4 +1,69 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function () {
+
+
+    // 获取数据集列表
+    function getAllDataset() {
+        fetch('/basenn/get_dataset', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // 将数据集列表添加到下拉框中
+                var datasetSelect = document.getElementById("dataset-select");
+                for (var i = 0; i < data.dataset.length; i++) {
+                    var option = document.createElement("option");
+                    option.text = data.dataset[i];
+                    datasetSelect.add(option);
+                }
+                
+            });
+    }
+
+    // 更新轮播项的内容
+function updateCarouselContent(dataset) {
+    var carouselItems = document.querySelectorAll('.carousel-item');
+    var subtitle = carouselItems[0].querySelector('.subtitle');
+    subtitle.textContent =  '当前选择的数据集是：' + dataset;
+}
+
+
+
+getAllDataset();
+
+    document.getElementById("dataset-submit-btn").addEventListener("click", function (event) {
+        event.preventDefault();
+    var datasetSelect = document.getElementById("dataset-select");
+    var dataset = datasetSelect.options[datasetSelect.selectedIndex].value;
+    console.log(dataset);
+    fetch('/basenn/select_dataset', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            dataset: dataset
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log(data);
+        if(data.success){
+            // 跳转到下一轮播页面
+            updateCarouselContent(dataset);
+            $('#myCarousel').carousel('next');
+        }
+        else{
+            alert("数据集选择失败，请检查数据集是否正确！");
+        }
+    });
+});
+
+
+
     const addLayerButton = document.getElementById("addLayer");
     addLayerButton.addEventListener("click", addLayer);
 
@@ -17,59 +82,59 @@ document.addEventListener("DOMContentLoaded", function() {
 
         const nowLayerLength = existingLayers.length + 1;
 
-        if (nowLayerLength == 1){
+        if (nowLayerLength == 1) {
             // 如果是第一层，添加监听器以更新上一层的输出维度
             const firstOutput = document.getElementById(`output-size${nowLayerLength}`);
-            firstOutput.addEventListener("input", function() {
+            firstOutput.addEventListener("input", function () {
                 const firstoutputSize = parseInt(firstOutput.value);
-                if(!isNaN(firstoutputSize)){
+                if (!isNaN(firstoutputSize)) {
                     previousOutputSize = firstoutputSize;
                 }
             });
         }
-        else if(nowLayerLength > 1){
+        else if (nowLayerLength > 1) {
             // 对于后续层，为输出维度添加监听以更新输入维度
-            for (let i = 1; i< nowLayerLength;i++){
+            for (let i = 1; i < nowLayerLength; i++) {
                 const output = document.getElementById(`output-size${i}`);
-                const input = document.getElementById(`input-size${i+1}`);
+                const input = document.getElementById(`input-size${i + 1}`);
                 output.addEventListener("input", () => {
                     const currentOutput = document.getElementById(`output-size${i}`);
                     const outputSize = parseInt(currentOutput.value);
-                    if (!isNaN(outputSize)){
+                    if (!isNaN(outputSize)) {
                         input.value = outputSize;
                     }
+                });
+            }
+
+            // 为最后一层添加监听器，以更新输出维度
+            const lastOutput = document.getElementById(`output-size${nowLayerLength}`);
+            lastOutput.addEventListener("input", function () {
+                const lastoutputSize = parseInt(lastOutput.value);
+                if (!isNaN(lastoutputSize)) {
+                    previousOutputSize = lastoutputSize;
+                }
             });
         }
 
-        // 为最后一层添加监听器，以更新输出维度
-        const lastOutput = document.getElementById(`output-size${nowLayerLength}`);
-        lastOutput.addEventListener("input", function() {
-            const lastoutputSize = parseInt(lastOutput.value);
-            if(!isNaN(lastoutputSize)){
-                previousOutputSize = lastoutputSize;
-            }
-        });
-        }
-
         // 重新绘制线
-        if (nowLayerLength > 1){
+        if (nowLayerLength > 1) {
             // 先将之前的线删除
             for (let i = 0; i < lineList.length; i++) {
                 lineList[i].remove();
             }
             lineList = [];
             // 重新绘制线
-            for (let i = 0; i < nowLayerLength-1; i++) {
-                line = createLine(document.getElementById(`layer-${i+1}`),document.getElementById(`layer-${i+2}`))
+            for (let i = 0; i < nowLayerLength - 1; i++) {
+                line = createLine(document.getElementById(`layer-${i + 1}`), document.getElementById(`layer-${i + 2}`))
                 lineList.push(line);
             }
         }
     }
 
-    
+
     function createLine(layer1, layer2) {
-        const line = new LeaderLine(layer1, layer2,{color:"white",dash:{animation:true}});
-        line.setOptions({ startSocket: 'right', endSocket: 'left'});
+        const line = new LeaderLine(layer1, layer2, { color: "white", dash: { animation: true } });
+        line.setOptions({ startSocket: 'right', endSocket: 'left' });
         line.path = 'grid';
         return line;
     }
@@ -79,7 +144,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const layer = document.createElement("div");
         layer.className = "layer";
         layer.id = `layer-${layerNumber}`;
-        
+
         const layerInfo = document.createElement("div");
         layerInfo.className = "layer-info";
         layerInfo.innerHTML = `
@@ -87,7 +152,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <span class="layer-type">类型：Linear</span>
         `;
 
-        
+
         const layerDimensions = document.createElement("div");
         layerDimensions.className = "layer-dimensions";
         layerDimensions.innerHTML = `
@@ -96,7 +161,7 @@ document.addEventListener("DOMContentLoaded", function() {
             <span class="layer-name">输出维度:</span>
             <input type="text"  id="output-size${layerNumber}" value="0">
         `;
-        
+
         const activationDropdown = document.createElement("div");
         activationDropdown.className = "activation-dropdown";
         activationDropdown.innerHTML = `<span class="layer-name">激活函数:</span>
@@ -151,15 +216,15 @@ document.addEventListener("DOMContentLoaded", function() {
         }
         lineList = [];
         // 重新绘制线
-        for (let i = 0; i < layers.length-1; i++) {
-            line = createLine(document.getElementById(`layer-${i+1}`),document.getElementById(`layer-${i+2}`))
+        for (let i = 0; i < layers.length - 1; i++) {
+            line = createLine(document.getElementById(`layer-${i + 1}`), document.getElementById(`layer-${i + 2}`))
             lineList.push(line);
         }
-      }
+    }
 
     // 当层数过多时，滑动过程中会出现线的断裂，有些线需要隐藏，有些线需要显示
     var myNetwork = document.querySelector(".network-container");
-    myNetwork.addEventListener("scroll", function() {
+    myNetwork.addEventListener("scroll", function () {
         for (let i = 0; i < lineList.length; i++) {
             lineList[i].position();
         }
@@ -174,55 +239,55 @@ document.addEventListener("DOMContentLoaded", function() {
 
     function hideLine() {
         for (let i = 0; i < lineList.length; i++) {
-            lineList[i].hide(['fade',[{duration: 10}]]);
+            lineList[i].hide(['fade', [{ duration: 10 }]]);
         }
     }
 
     // 跳转到其他页面时候隐藏线
-    $(document).ready(function(){
+    $(document).ready(function () {
         $('#myCarousel').on('slid.bs.carousel', function () {
             var currentIndex = $('#myCarousel .active').index();
-            if(currentIndex == 1){
+            if (currentIndex == 1) {
                 showLine();
             }
-            else{
+            else {
                 hideLine();
             }
-    });
+        });
     });
 
 
-      // 算法1：通过监听滚动事件，获取滚动条的位置，当滚动条的位置大于某个值时，隐藏线
-      // 如果向下滚动，每滚动80px，从上往下隐藏一条线，如果向上滚动，每滚动80px，从下往上隐藏一条线
-        // var scrollPos = 0;
-        // var networkContainer = document.querySelector(".network-container");
-        // networkContainer.addEventListener("scroll", function(){
-        // var currentScrollPos = networkContainer.scrollTop;
-        // console.log(currentScrollPos);
-        // if (currentScrollPos > scrollPos){
-        //     // 向下滚动
-        //     num = parseInt(currentScrollPos/80);
-        //     for (let i = 0; i < num; i++) {
-        //         lineList[i].hide(['draw']);
-        //     }
-        //     for (let i = 0; i < lineList.length-num; i++) {
-        //         lineList[lineList.length-1-i].show(['draw']);
-        //     }
-        //     scrollPos = currentScrollPos;
-        // }
-        // else{ // todo 微调一下算法，这块也可以不加，因为下方的线不是很妨碍观感。 网络搭建基本完成-10.31
-        //     num = parseInt((scrollPos - currentScrollPos)/80);
-        //     for (let i = 0; i < num; i++) {
-        //         lineList[i].show(['draw']);
-        //     }
-        // }
-        // });
+    // 算法1：通过监听滚动事件，获取滚动条的位置，当滚动条的位置大于某个值时，隐藏线
+    // 如果向下滚动，每滚动80px，从上往下隐藏一条线，如果向上滚动，每滚动80px，从下往上隐藏一条线
+    // var scrollPos = 0;
+    // var networkContainer = document.querySelector(".network-container");
+    // networkContainer.addEventListener("scroll", function(){
+    // var currentScrollPos = networkContainer.scrollTop;
+    // console.log(currentScrollPos);
+    // if (currentScrollPos > scrollPos){
+    //     // 向下滚动
+    //     num = parseInt(currentScrollPos/80);
+    //     for (let i = 0; i < num; i++) {
+    //         lineList[i].hide(['draw']);
+    //     }
+    //     for (let i = 0; i < lineList.length-num; i++) {
+    //         lineList[lineList.length-1-i].show(['draw']);
+    //     }
+    //     scrollPos = currentScrollPos;
+    // }
+    // else{ // todo 微调一下算法，这块也可以不加，因为下方的线不是很妨碍观感。 网络搭建基本完成-10.31
+    //     num = parseInt((scrollPos - currentScrollPos)/80);
+    //     for (let i = 0; i < num; i++) {
+    //         lineList[i].show(['draw']);
+    //     }
+    // }
+    // });
 
     // 算法2：通过监听每一层的位置，当某一层的位置大于某个值时，隐藏线
     // 获得容器的高度
     var networkContainer = document.querySelector(".network-container");
     // 监听滚动事件
-    networkContainer.addEventListener("scroll", function(){
+    networkContainer.addEventListener("scroll", function () {
         var networkTop = networkContainer.offsetTop;
         var networkHeight = networkContainer.offsetHeight;
         var networkBottom = networkTop + networkHeight;
@@ -241,36 +306,36 @@ document.addEventListener("DOMContentLoaded", function() {
 
         var currentScrollPos = networkContainer.scrollTop;
         console.log(currentScrollPos);
-        for (let i = 0; i < layers.length-1; i++) {
-            if (layerTop[i] > currentScrollPos && layerTop[i] < currentScrollPos + networkHeight){
+        for (let i = 0; i < layers.length - 1; i++) {
+            if (layerTop[i] > currentScrollPos && layerTop[i] < currentScrollPos + networkHeight) {
                 lineList[i].show(['draw']);
             }
-            else{
+            else {
                 lineList[i].hide(['draw']);
             }
         }
     });
 
     // 鼠标悬停到删除按钮上时，删除按钮变红
-    $(".delete-button").mouseover(function(){
-        $(this).css("color","red");
+    $(".delete-button").mouseover(function () {
+        $(this).css("color", "red");
     });
 
     // 监听提交按钮，提交网络结构到后盾
     const submitButton = document.getElementById("network-submit-btn");
     submitButton.addEventListener("click", submitNetwork);
 
-    function submitNetwork(){
+    function submitNetwork() {
         // 获得所有层的信息
         const layers = document.querySelectorAll(".layer");
         const layerInfoList = [];
         let layerInfo = {};
         for (let i = 0; i < layers.length; i++) {
             const layer = layers[i];
-            const id = i+1;
+            const id = i + 1;
             const type = "linear"
-            const inputSize = layer.querySelector(`#input-size${i+1}`).value;
-            const outputSize = layer.querySelector(`#output-size${i+1}`).value;
+            const inputSize = layer.querySelector(`#input-size${i + 1}`).value;
+            const outputSize = layer.querySelector(`#output-size${i + 1}`).value;
             const activation = layer.querySelector(".activation-dropdown select").value;
             layerInfo = {
                 "id": id,
@@ -291,17 +356,17 @@ document.addEventListener("DOMContentLoaded", function() {
                 network: layerInfoList
             })
         }).then(response => response.json())
-        .then(result => {
-            console.log(result);
-            if (result.success){
-                // 跳转到下一轮播页面
-                $('#myCarousel').carousel('next');
+            .then(result => {
+                console.log(result);
+                if (result.success) {
+                    // 跳转到下一轮播页面
+                    $('#myCarousel').carousel('next');
 
-            }
-            else{
-                alert("网络结构设置失败，请检查网络结构是否正确！");
-            }
-        });
+                }
+                else {
+                    alert("网络结构设置失败，请检查网络结构是否正确！");
+                }
+            });
     }
 
 
@@ -325,13 +390,13 @@ document.addEventListener("DOMContentLoaded", function() {
                 console.log(data);
                 // 在这里可以执行其他操作，例如更新页面内容
                 // 显示模态框
-                if(data.success){
+                if (data.success) {
                     $('#myModal3').modal('show');
                 }
-                else{
+                else {
                     alert("参数设置失败，请检查参数是否正确！");
                 }
-                
+
             })
             .catch(error => {
                 // 处理错误
@@ -342,34 +407,34 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 提交其他参数到后端
     document.getElementById("advset-submit-btn").addEventListener("click", function (event) {
-            event.preventDefault();
-            var metricsSelect = document.getElementById("metrics-select");
-            var metrics = metricsSelect.options[metricsSelect.selectedIndex].value;
-            var lossSelect = document.getElementById("loss-select");
-            var loss = lossSelect.options[lossSelect.selectedIndex].value;
-            var pretrainedSelect = document.getElementById("pretrained-select");
-            var pretrained = pretrainedSelect.options[pretrainedSelect.selectedIndex].value;
+        event.preventDefault();
+        var metricsSelect = document.getElementById("metrics-select");
+        var metrics = metricsSelect.options[metricsSelect.selectedIndex].value;
+        var lossSelect = document.getElementById("loss-select");
+        var loss = lossSelect.options[lossSelect.selectedIndex].value;
+        var pretrainedSelect = document.getElementById("pretrained-select");
+        var pretrained = pretrainedSelect.options[pretrainedSelect.selectedIndex].value;
 
-            var requestData = {
-                "metrics": metrics,
-                "loss": loss,
-                "pretrained": pretrained
-            };
-            console.log(requestData);
-            fetch('/basenn/set_advance_cfg', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(requestData)
-            }).then(response => response.json())
+        var requestData = {
+            "metrics": metrics,
+            "loss": loss,
+            "pretrained": pretrained
+        };
+        console.log(requestData);
+        fetch('/basenn/set_advance_cfg', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        }).then(response => response.json())
             .then(data => {
                 console.log(data);
-                if(data.success){
+                if (data.success) {
                     // 跳转到下一轮播页面
                     // $('#myCarousel').carousel('next');
                 }
-                else{
+                else {
                     alert("参数设置失败，请检查参数是否正确！");
                 }
             });
@@ -404,20 +469,20 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // 点击复制代码到剪贴板
     $(function () { $("[data-toggle='tooltip']").tooltip(); });
-    function copyCode2Clipboard(){
+    function copyCode2Clipboard() {
         var clipboard = new ClipboardJS('#code-copy-btn');
-        
-        var clipbtn  = document.getElementById('code-copy-btn');
 
-        clipboard.on('success', function(e) {
+        var clipbtn = document.getElementById('code-copy-btn');
+
+        clipboard.on('success', function (e) {
             // alert("代码已经复制到剪贴板!");
             e.clearSelection();
             // clipbtn.setAttribute('title','copy to clipboard');
             $('#code-copy-btn').tooltip('show')
 
-            setTimeout(function(){
+            setTimeout(function () {
                 $('#code-copy-btn').tooltip('hide')
-            },1000);
+            }, 1000);
 
 
         });
@@ -425,5 +490,295 @@ document.addEventListener("DOMContentLoaded", function() {
 
     copyCode2Clipboard();
 
+
+
+    var G_totalEpoch = 0;
+    var G_checkpoints_path = "";
+
+    function get_epoch() {
+        // 从后端获取总epoch
+        fetch('/basenn/get_epoch', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                G_totalEpoch = data['epoch'];
+            });
+    }
+
+
+    var lossChart = echarts.init(document.getElementById('loss-chart'));
+    var accChart = echarts.init(document.getElementById('acc-chart'));
+
+    // 图表配置
+    var lossOption = {
+        title: {
+            text: 'Loss Chart'
+        },
+        tooltip: {},
+        legend: {
+            data: ['loss']
+        },
+        xAxis: {
+            data: [],
+            name: 'epoch',
+
+        },
+        yAxis: {
+            name: 'loss',
+        },
+        series: [{
+            name: 'loss',
+            type: 'line',
+            smooth: true,
+            data: []
+        }]
+    };
+
+    var accOption = {
+        title: {
+            text: 'Accuracy Chart'
+        },
+        tooltip: {},
+        legend: {
+            data: ['accuracy']
+        },
+        xAxis: {
+            data: [],
+            name: 'epoch',
+        },
+        yAxis: {
+            name: 'accuracy',
+        },
+        series: [{
+            name: 'accuracy',
+            type: 'line',
+            smooth: true,
+            data: []
+        }]
+    };
+
+
+
+
+
+    var total_log_data = [];
+
+    // 点击开始训练按钮，发送请求到后端
+    document.getElementById('start-train-btn').addEventListener('click', function () {
+        console.log("start training");
+        get_epoch();
+        fetch('/basenn/start_thread', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(response => response.json())
+            .then(data => {
+                console.log(data);
+            });
+        // 按钮被禁用
+        document.getElementById('start-train-btn').disabled = true;
+
+        clearTrainProgressBar();
+        poll_log();
+        // 按钮被禁用
+        // document.getElementById('start-train-btn').disabled = true;
+    });
+
+
+    // 点击结束训练按钮，发送请求到后端
+    document.getElementById('stop-train-btn').addEventListener('click', function () {
+        fetch('/basenn/stop_thread', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // 训练按钮被启用
+            document.getElementById('start-train-btn').disabled = false;
+            lossChart.hideLoading();
+            accChart.hideLoading();
+            // console.log(total_log_data);
+            if(data.success){
+                $('#trainTerminateModal').modal('show');
+            }
+            else{
+                trainTerminateModal = document.getElementById('trainTerminateModal');
+                body = trainTerminateModal.getElementsByClassName("modal-body")[0];
+                p = body.getElementsByTagName("p")[0];
+                p.innerHTML = data.message;
+                // 设置自动换行
+                p.style.wordWrap = "break-word";
+                $('#trainTerminateModal').modal('show');
+            }
+            
+        });
+    });
+
+    num = 0;
+    const socket = io.connect('http://localhost:5000');
+    function poll_log() {
+        lossList = []
+        accList = []
+        currentEpoch = 0
+        length_per_epoch = 0
+        temp_loss = [];
+        temp_acc = [];
+        // 清除图表数据
+        lossOption.series[0].data = [];
+        accOption.series[0].data = [];
+
+        // chart的加载动画
+        lossChart.showLoading();
+        accChart.showLoading();
+
+        lossChart.setOption(lossOption);
+        accChart.setOption(accOption);
+        flag = 0;
+        const data_reg = /\{epoch:(.*)  Loss:(.*)  Accuracy:(.*)\}/;
+        const checkpoints_reg = /保存模型(.*)成功！/;
+        socket.on('log1', (data) => {
+            if (flag == 0) {
+                lossChart.hideLoading();
+                accChart.hideLoading();
+                lossChart.setOption(lossOption);
+                accChart.setOption(accOption);
+                flag = 1;
+            }
+            // 显示图表的坐标轴
+            // 判断data是否含有{},如果有，则包含了epoch,loss,accuracy等信息data = '{epoch:0  Loss:2.0790  Accuracy:0.1172}\n'
+            if (data.includes("{")) {
+                // console.log(num, data);
+                // 使用正则表达式提取epoch,loss,Accuracy
+                var result = data_reg.exec(data);
+                epoch = parseInt(result[1]); // 记得转换！！，否则计算时会有问题
+                loss = parseFloat(result[2]);
+                acc = parseFloat(result[3]);
+                if (epoch == currentEpoch) {
+                    temp_loss.push(loss);
+                    temp_acc.push(acc);
+                }
+                else if (epoch != currentEpoch) {
+                    console.log("draw chart")
+
+                    var loss_sum = 0;
+                    var acc_sum = 0;
+                    // 求temp_loss temp_acc 的平均值
+                    for (var i = 0; i < temp_loss.length; i++) {
+                        loss_sum += parseFloat(temp_loss[i]);
+                        acc_sum += parseFloat(temp_acc[i]);
+                    }
+                    var avgLoss = loss_sum / temp_loss.length;
+                    var avgAcc = acc_sum / temp_acc.length;
+                    // 设置进度条
+                    setTrainProgressBar(epoch);
+                    // 更新图表
+                    lossOption.series[0].data.push(avgLoss);
+                    lossChart.setOption(lossOption);
+                    accOption.series[0].data.push(avgAcc);
+                    accChart.setOption(accOption);
+                    // 清空temp_loss temp_acc
+                    temp_loss = [];
+                    temp_acc = [];
+                    lossList.push(avgLoss);
+                    accList.push(avgAcc);
+                    currentEpoch += 1
+                    temp_loss.push(loss);
+                    temp_acc.push(acc);
+                    console.log(epoch, currentEpoch)
+                }
+            }
+
+            // 当data出现类似保存模型D:\workspace\XEdu\EasyDL2.0\checkpoints\basenn_20231103_162909\basenn.pth成功！时
+            // 清空lossList,accList
+            if (data.includes("成功")) {
+                // console.log(temp_loss,temp_acc)
+                var loss_sum = 0;
+                var acc_sum = 0;
+                // 求temp_loss temp_acc 的平均值
+                for (var i = 0; i < temp_loss.length; i++) {
+                    loss_sum += temp_loss[i];
+                    acc_sum += temp_acc[i];
+                }
+                var avgLoss = loss_sum / temp_loss.length;
+                var avgAcc = acc_sum / temp_acc.length;
+                // 设置进度条
+                setTrainProgressBar(epoch);
+                // 更新图表
+                lossOption.series[0].data.push(avgLoss);
+                lossChart.setOption(lossOption);
+                accOption.series[0].data.push(avgAcc);
+                accChart.setOption(accOption);
+                // 清空temp_loss temp_acc
+                temp_loss = [];
+                temp_acc = [];
+                lossList.push(avgLoss);
+                accList.push(avgAcc);
+                currentEpoch += 1
+                temp_loss.push(loss);
+                temp_acc.push(acc);
+                // console.log(epoch,currentEpoch)
+                // console.log(lossList);
+                // console.log(accList);
+                lossList = [];
+                accList = [];
+                currentEpoch = 0;
+                invervalEpoch = Math.floor(G_totalEpoch / 10);
+                // 最后绘制图表的x轴
+                lossOption.xAxis.data = [];
+                accOption.xAxis.data = [];
+                for (var i = 1; i <= G_totalEpoch; i++) {
+                    if (i % invervalEpoch == 0) {
+                        lossOption.xAxis.data.push(i.toString());
+                        accOption.xAxis.data.push(i.toString());
+                    }
+                }
+                lossChart.setOption(lossOption);
+                accChart.setOption(accOption);
+                // 训练按钮被启用
+                document.getElementById('start-train-btn').disabled = false;
+                // 使用正则表达式提取checkpoints_path
+                var result = checkpoints_reg.exec(data);
+                checkpoints_path = result[1];
+                console.log(checkpoints_path);
+                setTrainFinishModal(checkpoints_path);
+            }
+        })
+    }
+    function setTrainFinishModal(checkpoints_path) {
+        console.log("setTrainFinishModal");
+        var trainFinishModal = document.getElementById('trainFinishModal');
+        trainFinishModal.setAttribute("aria-labelledby", "Train Finish");
+        body = trainFinishModal.getElementsByClassName("modal-body")[0];
+        p = body.getElementsByTagName("p")[0];
+        p.innerHTML = "训练已经结束，模型权重和日志保存路径为:" + checkpoints_path;
+        // 设置自动换行
+        p.style.wordWrap = "break-word";
+        $('#trainFinishModal').modal('show');
+    }
+
+    function setTrainProgressBar(epochs) {
+        console.log("setTrainProgressBar", epochs, G_totalEpoch);
+        console.log(epochs / G_totalEpoch);
+        var percent = (epochs + 1) / G_totalEpoch * 100;
+        // console.log(percent);
+        var progressBar = document.getElementById('progress-bar');
+        progressBar.setAttribute("aria-valuenow", percent.toString());
+        progressBar.style.width = percent.toString() + "%";
+    }
+
+    function clearTrainProgressBar() {
+        var progressBar = document.getElementById('progress-bar');
+        progressBar.setAttribute("aria-valuenow", "0");
+        progressBar.style.width = "0%";
+    }
 
 });

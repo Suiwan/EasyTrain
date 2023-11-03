@@ -500,6 +500,7 @@
                         <select class="form-select form-control" id="optimizer-select" name="optimizer">
                             <option value="SGD">SGD</option>
                             <option value="Adam">Adam</option>
+                            <option value="Adagrad">Adagrad</option>
                         </select>
                         </li>
                         <li class="list-group-item">
@@ -548,6 +549,26 @@
         </div>
 
     </div>
+
+          <!-- 训练中止提示-->
+          <div class="modal" id="trainTerminateModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- 模态框头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">训练终止</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modal-message">训练已终止，请重新训练</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light modal-close-btn" data-dismiss="modal" id="btn-modal-close">好的</button>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
 
 
     <!-- 引入 Bootstrap JavaScript -->

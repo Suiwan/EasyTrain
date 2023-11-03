@@ -199,10 +199,10 @@
                                         <label class="card-text" >学习率：</label>
                                     <input type="text" class="form-control"  name="lr" id="lr" placeholder="例如：0.001" value="0.01">
                                     </li>
-                                    <!-- <li class="list-group-item">
-                                        <label class="card-text" for="batch_size">批次大小：</label>
+                                    <li class="list-group-item">
+                                        <label class="card-text" >批次大小：</label>
                                     <input type="text"  class="form-control" name="batch_size" id="batch_size" placeholder="例如：32" value="32">
-                                    </li> -->
+                                    </li>
                                     <li class="list-group-item" >
                                         <label  class="card-text">训练轮数：</label>
                                     <input type="text"  class="form-control" name="epochs" id="epochs" placeholder="例如：10" value="10"> 
@@ -406,6 +406,14 @@
                             </select>
                         </li>
                         <li class="list-group-item" id="adv-item">
+                            <label class="card-text" style="font-size: 18px;">优化器</label>
+                            <select class="form-select form-control" id="optimizer-select" name="optimizer">
+                                <option value="SGD">SGD</option>
+                                <option value="Adam">Adam</option>
+                                <option value="Adagrad">Adagrad</option>
+                            </select>
+                        </li>
+                        <li class="list-group-item" id="adv-item">
                             <label class="card-text" style="font-size: 18px;">预训练模型</label>
                             <select class="form-select form-control" id="pretrained-select" name="pretrained">
                                 <option value="None">不使用预训练模型</option>
@@ -441,6 +449,26 @@
         </div>
 
     </div>
+
+        <!-- 训练中止提示-->
+        <div class="modal" id="trainTerminateModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- 模态框头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">训练终止</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modal-message">训练已终止，请重新训练</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-light modal-close-btn" data-dismiss="modal" id="btn-modal-close">好的</button>
+                    </div>
+                </div>
+            </div>
+    
+        </div>
 
 
     <!-- 引入 Bootstrap JavaScript -->

@@ -1,5 +1,0 @@
-{"tool": "MMEdu0.1.22", "task": "Classification", "backbone": "LeNet", "device": "cpu", "dataset_size": 2520, "learning_rate": 0.01, "hook_msgs": {}}
-{"mode": "train", "epoch": 1, "iter": 10, "lr": 0.01, "data_time": 2.47973, "loss": 1.09356, "time": 2.494}
-{"mode": "train", "epoch": 1, "iter": 20, "lr": 0.01, "data_time": 0.0086, "loss": 1.0865, "time": 0.02225}
-{"mode": "train", "epoch": 1, "iter": 30, "lr": 0.01, "data_time": 0.00812, "loss": 1.0873, "time": 0.02177}
-{"mode": "train", "epoch": 1, "iter": 40, "lr": 0.01, "data_time": 0.00756, "loss": 1.06832, "time": 0.02016}

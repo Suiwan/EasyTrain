@@ -1,0 +1,3 @@
+
+# 忽略.pth文件
+global-exclude *.pth

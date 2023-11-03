@@ -1,4 +1,7 @@
 
+// 是否生成过代码
+var isGenerated = false;
+
 // 任务类型和模型列表,需要实时更新
 var modelList = {
     "classification": ["LeNet", "ResNet18", "ResNet50", "MobileNet"],
@@ -279,6 +282,7 @@ document.getElementById('code-generate-btn').addEventListener('click', function 
         .then(data => {
             // 处理成功响应
             console.log(data);
+            isGenerated = true;
             // 在code标签中显示代码
             var code = document.getElementsByTagName('code')[0];
             code.innerHTML = data;
@@ -397,6 +401,10 @@ var total_log_data = [];
 
 // 点击开始训练按钮，发送请求到后端
 document.getElementById('start-train-btn').addEventListener('click', function () {
+    if (!isGenerated) {
+        alert("请先生成代码!");
+        return;
+    }
     get_epoch();
     // 构建请求数据
     // 发送POST请求到Flask后端
@@ -429,10 +437,21 @@ document.getElementById('stop-train-btn').addEventListener('click', function () 
         document.getElementById('start-train-btn').disabled = false;
 
         // 停止轮询
-        clearInterval(intervalId);
+        // clearInterval(intervalId);
         lossChart.hideLoading();
         accChart.hideLoading();
-        console.log(total_log_data);
+        if(data.success){
+            $('#trainTerminateModal').modal('show');
+        }
+        else{
+            trainTerminateModal = document.getElementById('trainTerminateModal');
+            body = trainTerminateModal.getElementsByClassName("modal-body")[0];
+            p = body.getElementsByTagName("p")[0];
+            p.innerHTML = data.message;
+            // 设置自动换行
+            p.style.wordWrap = "break-word";
+            $('#trainTerminateModal').modal('show');
+        }
     });
 });
 
@@ -508,26 +527,36 @@ function get_checkpoints_path(){
 
 
 // console.log(G_checkpoints_path);
-
+const socket = io.connect('http://localhost:5000');
 function poll_log(){
-    const socket = io.connect('http://localhost:5000');
+// 连接socket
+
     lossList = []
     accList = []
     currentEpoch = 1
     temp_loss = [];
 
+    // 清除图表数据
+    lossOption.series[0].data = [];
+    accOption.series[0].data = [];
+
     // chart的加载动画
     lossChart.showLoading();
     accChart.showLoading();
 
+    flag = true;
 socket.on('log', (log) => {
     // console.log(log);
-    invervalEpoch = Math.floor(G_totalEpoch/10);
-    lossChart.hideLoading();
-    accChart.hideLoading();
-    // 显示图表的坐标轴
-    lossChart.setOption(lossOption);
-    accChart.setOption(accOption);
+    if(flag){
+        lossChart.hideLoading();
+        accChart.hideLoading();
+        // 显示图表的坐标轴
+        lossChart.setOption(lossOption);
+        accChart.setOption(accOption);
+        flag = false;
+    }
+
+
 
     // 如果跟上一次的数据不一致，就加入
     if (total_log_data.length == 0 || total_log_data[total_log_data.length - 1] != log) {
@@ -567,7 +596,7 @@ socket.on('log', (log) => {
             currentEpoch+=1
         }
 
-        if (mode == "val" && epoch==G_totalEpoch){
+        if (mode == "val" && epoch==G_totalEpoch){ // 这段代码逻辑有点问题，其实不应该发请求
             console.log("应该停止训练模型了");
             fetch('/mmedu/stop_thread', {
                 method: 'GET',
@@ -578,7 +607,6 @@ socket.on('log', (log) => {
             .then(response => response.json())
             .then(data => {
                 console.log(data);
-                console.log(total_log_data);
                 console.log(lossList);
                 console.log(accList);
                 // 清空lossList,accList
@@ -598,11 +626,8 @@ socket.on('log', (log) => {
                 }
                 lossChart.setOption(lossOption);
                 accChart.setOption(accOption);
-                // 断开socket连接
-                socket.disconnect();
                 // 训练按钮被启用
                 document.getElementById('start-train-btn').disabled = false;
-                // 设置模态框的文本内容
 
                 
             });
@@ -634,20 +659,22 @@ function setTrainFinishModal(checkpoints_path){
     body = trainFinishModal.getElementsByClassName("modal-body")[0];
     p = body.getElementsByTagName("p")[0];
     p.innerHTML = "训练已经结束，模型权重和日志保存路径为:"+checkpoints_path;
+    // 设置自动换行
+    p.style.wordWrap = "break-word";
     $('#trainFinishModal').modal('show');
 }
 
 
-const steps = document.querySelectorAll('.step');
+// const steps = document.querySelectorAll('.step');
 
-steps.forEach((step, index) => {
-  step.addEventListener('click', () => {
-    // 移除先前高亮的步骤
-    document.querySelector('.step.active')?.classList.remove('active');
-    // 高亮当前点击的步骤
-    step.classList.add('active');
-  });
-});
+// steps.forEach((step, index) => {
+//   step.addEventListener('click', () => {
+//     // 移除先前高亮的步骤
+//     document.querySelector('.step.active')?.classList.remove('active');
+//     // 高亮当前点击的步骤
+//     step.classList.add('active');
+//   });
+// });
 
 
 // 当点击设置其他参数
@@ -660,7 +687,7 @@ document.getElementById('set-other-params-btn').addEventListener('click', functi
     })
     .then(response => response.json())
     .then(data => {
-        console.log(data);
+        // console.log(data);
         // 将data中的模型列表添加到select中
         var pretrainedModelSelect = document.getElementById('pretrained-select');
         pretrainedModelSelect.innerHTML = '';

@@ -136,12 +136,10 @@ def get_local_pretrained_model():
 
 @mmedu_bp.route('/get_epoch',methods=['GET'])
 def get_epoch():
-    global shared_data
     return jsonify({'epoch': global_varibles['epoch']})
 
 @mmedu_bp.route('/get_checkpoints_path',methods=['GET'])
 def get_checkpoints_path():
-    global shared_data
     return jsonify({'checkpoints_path': global_varibles['checkpoints_path']})
 
 

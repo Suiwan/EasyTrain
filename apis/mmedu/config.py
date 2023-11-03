@@ -58,7 +58,7 @@ def set_batch_size(batch_size):
 def set_dataset_path(dataset_path):
     global_varibles["dataset_path"] = dataset_path
 
-def set_checkpoints_path(checkpoints_path):
+def set_mmedu_checkpoints_path(checkpoints_path):
     global_varibles["checkpoints_path"] = checkpoints_path
 
 def set_dataset(dataset):
@@ -149,7 +149,7 @@ def update_dataset_path():
     global_varibles["dataset_path"] = back2pwd(__file__,3)+ "\\dataset\\cls\\" + global_varibles["dataset"]
 
 
-def generate_code():
+def generate_mmedu_code():
     full_code=""
     if global_varibles['task'] == 'detection':
         import_part = "# coding:utf-8"+"\n"+"from MMEdu import MMDetection as det" + "\n"
