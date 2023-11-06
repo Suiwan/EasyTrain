@@ -17,50 +17,53 @@ document.addEventListener("DOMContentLoaded", function () {
                 for (var i = 0; i < data.dataset.length; i++) {
                     var option = document.createElement("option");
                     option.text = data.dataset[i];
+                    // relpace \ with /
+                    // option.text = option.text.replace(/\\/g, "/");
+                    option.value = data.dataset[i];
                     datasetSelect.add(option);
                 }
-                
+
             });
     }
 
     // 更新轮播项的内容
-function updateCarouselContent(dataset) {
-    var carouselItems = document.querySelectorAll('.carousel-item');
-    var subtitle = carouselItems[0].querySelector('.subtitle');
-    subtitle.textContent =  '当前选择的数据集是：' + dataset;
-}
+    function updateCarouselContent(dataset) {
+        var carouselItems = document.querySelectorAll('.carousel-item');
+        var subtitle = carouselItems[0].querySelector('.subtitle');
+        subtitle.textContent = '当前选择的数据集是：' + dataset;
+    }
 
 
 
-getAllDataset();
+    getAllDataset();
 
     document.getElementById("dataset-submit-btn").addEventListener("click", function (event) {
         event.preventDefault();
-    var datasetSelect = document.getElementById("dataset-select");
-    var dataset = datasetSelect.options[datasetSelect.selectedIndex].value;
-    console.log(dataset);
-    fetch('/basenn/select_dataset', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-            dataset: dataset
+        var datasetSelect = document.getElementById("dataset-select");
+        var dataset = datasetSelect.options[datasetSelect.selectedIndex].value;
+        console.log(dataset);
+        fetch('/basenn/select_dataset', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                dataset: dataset
+            })
         })
-    })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        if(data.success){
-            // 跳转到下一轮播页面
-            updateCarouselContent(dataset);
-            $('#myCarousel').carousel('next');
-        }
-        else{
-            alert("数据集选择失败，请检查数据集是否正确！");
-        }
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.success) {
+                    // 跳转到下一轮播页面
+                    updateCarouselContent(dataset);
+                    $('#myCarousel').carousel('next');
+                }
+                else {
+                    alert("数据集选择失败，请检查数据集是否正确！");
+                }
+            });
     });
-});
 
 
 
@@ -325,6 +328,32 @@ getAllDataset();
     const submitButton = document.getElementById("network-submit-btn");
     submitButton.addEventListener("click", submitNetwork);
 
+
+
+    // 检查网络结构是否有问题
+    function checkNetwork(layerInfoList) {
+        // 检查输入维度是否为正整数
+        for (let i = 0; i < layerInfoList.length; i++) {
+            if (!Number.isInteger(layerInfoList[i]['inputSize']) || layerInfoList[i]['inputSize'] <= 0) {
+                return false;
+            }
+        }
+        // 检查输出维度是否为正整数
+        for (let i = 0; i < layerInfoList.length; i++) {
+            if (!Number.isInteger(layerInfoList[i]['outputSize']) || layerInfoList[i]['outputSize'] <= 0) {
+                return false;
+            }
+        }
+        // 检查输入和输出维度是否匹配
+        for (let i = 0; i < layerInfoList.length - 1; i++) {
+            if (layerInfoList[i]['outputSize'] != layerInfoList[i + 1]['inputSize']) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+
     function submitNetwork() {
         // 获得所有层的信息
         const layers = document.querySelectorAll(".layer");
@@ -347,6 +376,12 @@ getAllDataset();
             layerInfoList.push(layerInfo);
         }
 
+        // 检查网络结构是否有问题
+        if (!checkNetwork(layerInfoList)) {
+            alert("网络结构设置有误，请检查网络结构是否正确！");
+            return;
+        }
+
         fetch("/basenn/set_network", {
             method: "POST",
             headers: {
@@ -360,6 +395,7 @@ getAllDataset();
                 console.log(result);
                 if (result.success) {
                     // 跳转到下一轮播页面
+                    $('#myModal2').modal('show');
                     $('#myCarousel').carousel('next');
 
                 }
@@ -599,28 +635,28 @@ getAllDataset();
                 'Content-Type': 'application/json'
             },
         })
-        .then(response => response.json())
-        .then(data => {
-            console.log(data);
-            // 训练按钮被启用
-            document.getElementById('start-train-btn').disabled = false;
-            lossChart.hideLoading();
-            accChart.hideLoading();
-            // console.log(total_log_data);
-            if(data.success){
-                $('#trainTerminateModal').modal('show');
-            }
-            else{
-                trainTerminateModal = document.getElementById('trainTerminateModal');
-                body = trainTerminateModal.getElementsByClassName("modal-body")[0];
-                p = body.getElementsByTagName("p")[0];
-                p.innerHTML = data.message;
-                // 设置自动换行
-                p.style.wordWrap = "break-word";
-                $('#trainTerminateModal').modal('show');
-            }
-            
-        });
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                // 训练按钮被启用
+                document.getElementById('start-train-btn').disabled = false;
+                lossChart.hideLoading();
+                accChart.hideLoading();
+                // console.log(total_log_data);
+                if (data.success) {
+                    $('#trainTerminateModal').modal('show');
+                }
+                else {
+                    trainTerminateModal = document.getElementById('trainTerminateModal');
+                    body = trainTerminateModal.getElementsByClassName("modal-body")[0];
+                    p = body.getElementsByTagName("p")[0];
+                    p.innerHTML = data.message;
+                    // 设置自动换行
+                    p.style.wordWrap = "break-word";
+                    $('#trainTerminateModal').modal('show');
+                }
+
+            });
     });
 
     num = 0;
@@ -780,5 +816,34 @@ getAllDataset();
         progressBar.setAttribute("aria-valuenow", "0");
         progressBar.style.width = "0%";
     }
+
+
+    document.getElementById('set-other-params-btn').addEventListener('click', function () {
+
+        var pretrainedModelSelect = document.getElementById('pretrained-select');
+        pretrainedModelSelect.innerHTML = '';
+        var option_none = document.createElement("option");
+        option_none.text = "不使用预训练模型";
+        option_none.value = "None";
+        pretrainedModelSelect.appendChild(option_none);
+        fetch('/basenn/get_local_pretrained_model', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                data = data['pretrained_model']
+                // 将data中的模型列表添加到select中
+                for (var i = 0; i < data.length; i++) {
+                    var option = document.createElement("option");
+                    option.text = data[i];
+                    option.value = data[i];
+                    pretrainedModelSelect.appendChild(option);
+                }
+            })
+    });
 
 });

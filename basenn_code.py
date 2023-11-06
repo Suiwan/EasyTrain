@@ -3,8 +3,8 @@ from BaseNN import nn
 
 def generated_train():
 	model = nn()
-	model.load_tab_data(r'D:\workspace\XEdu\dataset\basenn\workflow_pose_train.csv',batch_size=128)
-	model.save_fold = r'D:\workspace\XEdu\EasyDL2.0\checkpoints\basenn_20231103_191331'
+	model.load_tab_data(r'D:\workspace\XEdu\dataset\basenn\workflow\workflow_pose_train.csv',batch_size=128)
+	model.save_fold = r'D:\workspace\XEdu\EasyDL2.0\checkpoints\basenn_20231106_143205'
 	model.set_seed(42)
 	model.add(optimizer='Adam')
 	model.add(layer='linear',size=(52, 120),activation='relu')

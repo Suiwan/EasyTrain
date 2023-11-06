@@ -563,10 +563,22 @@ socket.on('log', (log) => {
         total_log_data.push(log);
         logJsno = JSON.parse(log);
 
-        epoch = logJsno['epoch'];
-        mode = logJsno['mode'];
-        loss = logJsno['loss'];
-        acc = logJsno['accuracy_top-1'];
+        // 获取logJson中的所有key
+        var keys = Object.keys(logJsno);
+        if ("accuracy_top-1" in logJsno){
+            epoch = logJsno['epoch'];
+            mode = logJsno['mode'];
+            loss = logJsno['loss'];
+            acc = logJsno['accuracy_top-1']; // 不一定是top-1
+        }
+        else{
+            epoch = logJsno['epoch'];
+            mode = logJsno['mode'];
+            loss = logJsno['loss'];
+            acc = logJsno['accuracy_top-5'];
+        }
+
+
         if (mode == "train" && epoch==currentEpoch){
             temp_loss.push(loss);
             console.log(loss)
@@ -597,40 +609,39 @@ socket.on('log', (log) => {
         }
 
         if (mode == "val" && epoch==G_totalEpoch){ // 这段代码逻辑有点问题，其实不应该发请求
-            console.log("应该停止训练模型了");
-            fetch('/mmedu/stop_thread', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-            })
-            .then(response => response.json())
-            .then(data => {
-                console.log(data);
-                console.log(lossList);
-                console.log(accList);
-                // 清空lossList,accList
-                lossList = [];
-                accList = [];
-                currentEpoch = 1;
-                get_checkpoints_path();
-                invervalEpoch = Math.floor(G_totalEpoch/10);
-                // 最后绘制图表的x轴
-                lossOption.xAxis.data = [];
-                accOption.xAxis.data = [];
-                for (var i=1;i<=G_totalEpoch;i++){
-                    if (i%invervalEpoch==0){
-                        lossOption.xAxis.data.push(i.toString());
-                        accOption.xAxis.data.push(i.toString());
-                    }
+            // console.log("应该停止训练模型了");
+            // fetch('/mmedu/stop_thread', {
+            //     method: 'GET',
+            //     headers: {
+            //         'Content-Type': 'application/json'
+            //     },
+            // })
+            // .then(response => response.json())
+            // .then(data => {
+            //     console.log(data);                
+            // });
+            console.log(lossList);
+            console.log(accList);
+            // 清空lossList,accList
+            lossList = [];
+            accList = [];
+            currentEpoch = 1;
+            get_checkpoints_path();
+            invervalEpoch = Math.floor(G_totalEpoch/10);
+            // 最后绘制图表的x轴
+            lossOption.xAxis.data = [];
+            accOption.xAxis.data = [];
+            for (var i=1;i<=G_totalEpoch;i++){
+                if (i%invervalEpoch==0){
+                    lossOption.xAxis.data.push(i.toString());
+                    accOption.xAxis.data.push(i.toString());
                 }
-                lossChart.setOption(lossOption);
-                accChart.setOption(accOption);
-                // 训练按钮被启用
-                document.getElementById('start-train-btn').disabled = false;
+            }
+            lossChart.setOption(lossOption);
+            accChart.setOption(accOption);
+            // 训练按钮被启用
+            document.getElementById('start-train-btn').disabled = false;
 
-                
-            });
         }
 
     }

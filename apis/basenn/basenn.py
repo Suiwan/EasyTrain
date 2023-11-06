@@ -26,6 +26,13 @@ def select_dataset():
     return jsonify({'message': '设置成功!', 'success': True})
 
 
+
+@basenn_bp.route('/get_local_pretrained_model',methods=['GET'])
+def get_local_pretrained_model():
+    print("get_local_pretrained_model",get_all_pretrained_model())
+    return jsonify({'pretrained_model': get_all_pretrained_model()})
+
+
 @basenn_bp.route('/set_network',methods=['POST'])
 def set_network():
     if request.method == 'POST':

@@ -3,3 +3,5 @@
 global-exclude *.pth
 # 忽略checkpoints文件夹中的所有文件
 global-exclude checkpoints/*
+# 忽略test.py文件
+global-exclude test.py

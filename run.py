@@ -99,6 +99,7 @@ def mmedu_train_task(child_conn):
     mmedu_running_process.communicate()
     print("subprocess end")
     mmedu_shared_data['IsRunning'] = False
+    print("isRunning",mmedu_shared_data['IsRunning'])
 
 
 def basenn_train_task():
@@ -206,8 +207,6 @@ def mmedu_start_thread():
         return jsonify({'message': '已经有一个模型在训练'})
     else:
         mmedu_shared_data['IsRunning'] = True
-        if mmedu_shared_data['IsRunning']:
-            print("start_thread")
         parent_conn, child_conn = Pipe()
         running_process= Process(target=mmedu_train_task,args=(child_conn,))
         running_process.start()
@@ -271,6 +270,6 @@ def get_basenn_code():
 
 
 if __name__ == '__main__':
-    # app.run(port=5000)
+    app.run(port=5000)
     # socketio.run(app,port=5000)
-    app.run(debug=True,port=5000)
+    # app.run(debug=True,port=5000)

@@ -31,8 +31,8 @@ def back2pwd(pwd,level):
 
 
 global_varibles = {
-    "dataset":"iris_training.csv",
-    "dataset_path": back2pwd(__file__,3) + "\\dataset\\basenn\\workflow_pose_train.csv",
+    "dataset":"iris\\iris_training.csv",
+    "dataset_path": back2pwd(__file__,3) + "\\dataset\\basenn\\workflow\\workflow_pose_train.csv",
     "checkpoints_path": back2pwd(__file__,3) + "\\checkpoints", # save fold path
     "lr": 0.01,
     "epochs": 10,
@@ -47,7 +47,21 @@ global_varibles = {
     "optimizer":"Adam"
 
 }
+def get_all_pth(pwd):
+    pth_list = []
+    for file in os.listdir(pwd):
+        if os.path.isdir(os.path.join(pwd,file)):
+            pth_list.extend(get_all_pth(os.path.join(pwd,file)))
+        else:
+            if file.split(".")[-1] == "pth":
+                pth_list.append(file)
+    return pth_list
 
+
+def get_all_pretrained_model():
+    pwd = back2pwd(__file__,3) + "\\checkpoints\\basenn_model"+ "\\" + global_varibles['dataset'].split("\\")[0]
+    return get_all_pth(pwd)
+    
 
 def set_global_network(network):
     global_varibles["network"] = network
@@ -99,11 +113,16 @@ def update_dataset_path():
 
 
 def get_all_dataset():
+    dataset_list = []
     pwd = back2pwd(__file__,3) + "\\dataset\\basenn"
-    dataset_list = os.listdir(pwd)
-    dataset_list = [x for x in dataset_list if not os.path.isdir(pwd + "\\" + x)]
+    dirs = os.listdir(pwd)
+    # print(dirs)
+    for dir in dirs:
+        for file in os.listdir(os.path.join(pwd,dir)):
+            # print(os.path.join(pwd,dir,file))
+            if os.path.isfile(os.path.join(pwd,dir,file)):
+                dataset_list.append(os.path.join(dir,file))
     return dataset_list
-
 
 def update_dataset_path():
     global_varibles["dataset_path"] = back2pwd(__file__,3) + "\\dataset\\basenn\\" + global_varibles["dataset"]

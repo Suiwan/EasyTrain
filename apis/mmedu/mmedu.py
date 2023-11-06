@@ -116,7 +116,7 @@ def get_local_pretrained_model():
         print("getting_local_pretrained_model")
         pretrained_models = get_all_pretrained_model()
         if global_varibles['task'] == 'classification':
-            res = pretrained_models['cls_model']
+            res = pretrained_models['mmedu_cls_model']
             # 根据dataset_path的最后一个文件夹名字，获取对应的预训练模型
             dataset_path = global_varibles['dataset_path']
             dataset_name = dataset_path.split('\\')[-1]
@@ -124,7 +124,7 @@ def get_local_pretrained_model():
             print(model_list)
             return jsonify(model_list)
         elif global_varibles['task'] == 'detection':
-            res = pretrained_models['det_model']
+            res = pretrained_models['mmedu_det_model']
             # 根据dataset_path的最后一个文件夹名字，获取对应的预训练模型
             dataset_path = global_varibles['dataset_path']
             dataset_name = dataset_path.split('\\')[-1]
