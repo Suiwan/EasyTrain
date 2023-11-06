@@ -17,7 +17,7 @@ global_varibles = {
     "task": "classification",
     "model": "LeNet",
     "dataset": "hand_gray",
-    "dataset_path": back2pwd(__file__,3) + "\\dataset\\cls\\hand_gray",
+    "dataset_path": back2pwd(__file__,3) + "\\datasets\\cls\\hand_gray",
     "checkpoints_path": back2pwd(__file__,3) + "\\checkpoints",
     "lr": 0.01,
     "epoch": 10,
@@ -89,13 +89,13 @@ def set_pretrained_path(pretrained_path):
 def get_all_dataset():
     res = {}
     # 获取cls文件夹下的所有文件夹
-    cls_dataset_path = back2pwd(__file__,3)  + "\\dataset\\cls"
+    cls_dataset_path = back2pwd(__file__,3)  + "\\datasets\\cls"
     cls_dataset_list = os.listdir(cls_dataset_path)
     # 过滤掉非文件夹
     cls_dataset_list = [x for x in cls_dataset_list if os.path.isdir(cls_dataset_path + "\\" + x)]
     res['cls'] = cls_dataset_list
     # 获取det文件夹下的所有文件夹
-    det_dataset_path = back2pwd(__file__,3)  + "\\dataset\\det"
+    det_dataset_path = back2pwd(__file__,3)  + "\\datasets\\det"
     det_dataset_list = os.listdir(det_dataset_path)
     # 过滤掉非文件夹
     det_dataset_list = [x for x in det_dataset_list if os.path.isdir(det_dataset_path + "\\" + x)]  
@@ -146,7 +146,7 @@ def update_pretrained_path(pretrained_model):
 
 
 def update_dataset_path():
-    global_varibles["dataset_path"] = back2pwd(__file__,3)+ "\\dataset\\cls\\" + global_varibles["dataset"]
+    global_varibles["dataset_path"] = back2pwd(__file__,3)+ "\\datasets\\cls\\" + global_varibles["dataset"]
 
 
 def generate_mmedu_code():

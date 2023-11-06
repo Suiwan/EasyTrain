@@ -32,7 +32,7 @@ def back2pwd(pwd,level):
 
 global_varibles = {
     "dataset":"iris\\iris_training.csv",
-    "dataset_path": back2pwd(__file__,3) + "\\dataset\\basenn\\workflow\\workflow_pose_train.csv",
+    "dataset_path": back2pwd(__file__,3) + "\\datasets\\basenn\\workflow\\workflow_pose_train.csv",
     "checkpoints_path": back2pwd(__file__,3) + "\\checkpoints", # save fold path
     "lr": 0.01,
     "epochs": 10,
@@ -109,12 +109,12 @@ def update_pretrained_path(pretrained):
     global_varibles['pretrained_path'] = pretrained_path
 
 def update_dataset_path():
-    global_varibles["dataset_path"] = back2pwd(__file__,3) + "\\dataset\\" + global_varibles["dataset"]
+    global_varibles["dataset_path"] = back2pwd(__file__,3) + "\\datasets\\" + global_varibles["dataset"]
 
 
 def get_all_dataset():
     dataset_list = []
-    pwd = back2pwd(__file__,3) + "\\dataset\\basenn"
+    pwd = back2pwd(__file__,3) + "\\datasets\\basenn"
     dirs = os.listdir(pwd)
     # print(dirs)
     for dir in dirs:
@@ -125,7 +125,7 @@ def get_all_dataset():
     return dataset_list
 
 def update_dataset_path():
-    global_varibles["dataset_path"] = back2pwd(__file__,3) + "\\dataset\\basenn\\" + global_varibles["dataset"]
+    global_varibles["dataset_path"] = back2pwd(__file__,3) + "\\datasets\\basenn\\" + global_varibles["dataset"]
 
 
 
