@@ -329,31 +329,6 @@ document.addEventListener("DOMContentLoaded", function () {
     submitButton.addEventListener("click", submitNetwork);
 
 
-
-    // 检查网络结构是否有问题
-    function checkNetwork(layerInfoList) {
-        // 检查输入维度是否为正整数
-        for (let i = 0; i < layerInfoList.length; i++) {
-            if (!Number.isInteger(layerInfoList[i]['inputSize']) || layerInfoList[i]['inputSize'] <= 0) {
-                return false;
-            }
-        }
-        // 检查输出维度是否为正整数
-        for (let i = 0; i < layerInfoList.length; i++) {
-            if (!Number.isInteger(layerInfoList[i]['outputSize']) || layerInfoList[i]['outputSize'] <= 0) {
-                return false;
-            }
-        }
-        // 检查输入和输出维度是否匹配
-        for (let i = 0; i < layerInfoList.length - 1; i++) {
-            if (layerInfoList[i]['outputSize'] != layerInfoList[i + 1]['inputSize']) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-
     function submitNetwork() {
         // 获得所有层的信息
         const layers = document.querySelectorAll(".layer");
@@ -375,12 +350,40 @@ document.addEventListener("DOMContentLoaded", function () {
             };
             layerInfoList.push(layerInfo);
         }
+        console.log(layerInfoList);
 
-        // 检查网络结构是否有问题
-        if (!checkNetwork(layerInfoList)) {
-            alert("网络结构设置有误，请检查网络结构是否正确！");
-            return;
+              // 检查输入维度是否为正整数
+              for (let i = 0; i < layerInfoList.length; i++) {
+                inputSize = parseInt(layerInfoList[i]['inputSize']);
+                if (!Number.isInteger(inputSize) || inputSize <= 0) {
+                    info = "第" + (i + 1) + "层的输入维度必须为正整数！";
+                    alert(info);
+                    return;
+                }
+            }
+
+                   // 检查输出维度是否为正整数
+            for (let i = 0; i < layerInfoList.length; i++) {
+                outputSize = parseInt(layerInfoList[i]['outputSize']);
+                if (!Number.isInteger(outputSize) || outputSize <= 0) {
+                    info = "第" + (i + 1) + "层的输出维度必须为正整数！";
+                    alert(info);
+                    return;
+                }
+            }
+
+        // 检查输入和输出维度是否匹配
+        for (let i = 0; i < layerInfoList.length - 1; i++) {
+            inputSize = parseInt(layerInfoList[i+1]['inputSize']);
+            outputSize = parseInt(layerInfoList[i]['outputSize']);
+            if (inputSize != outputSize) {
+                console.log(inputSize, outputSize);
+                info = "第" + (i + 1) + "层的输出维度必须等于第" + (i + 2) + "层的输入维度！";
+                alert(info);
+                return;
+            }
         }
+
 
         fetch("/basenn/set_network", {
             method: "POST",
@@ -503,6 +506,15 @@ document.addEventListener("DOMContentLoaded", function () {
             });
     });
 
+    // 函数：点击跳转到下一轮播项
+function nextCarouselItem() {
+    $('.carousel').carousel('next');
+}
+
+   // 给goto-train-btn绑定事件，点击跳转到训练页面
+   document.getElementById('goto-train-btn').addEventListener('click', function () {
+    nextCarouselItem();
+});
     // 点击复制代码到剪贴板
     $(function () { $("[data-toggle='tooltip']").tooltip(); });
     function copyCode2Clipboard() {
@@ -826,6 +838,10 @@ document.addEventListener("DOMContentLoaded", function () {
         option_none.text = "不使用预训练模型";
         option_none.value = "None";
         pretrainedModelSelect.appendChild(option_none);
+        var option_custom = document.createElement("option");
+        option_custom.text = "自定义";
+        option_custom.value = "custom";
+        pretrainedModelSelect.appendChild(option_custom);
         fetch('/basenn/get_local_pretrained_model', {
             method: 'GET',
             headers: {
@@ -843,7 +859,108 @@ document.addEventListener("DOMContentLoaded", function () {
                     option.value = data[i];
                     pretrainedModelSelect.appendChild(option);
                 }
+
+                // 如果选择了自定义，就加入一个自定义的输入框
+                pretrainedModelSelect.addEventListener('change', function () {
+                    var selectedPretrainedModel = pretrainedModelSelect.options[pretrainedModelSelect.selectedIndex].value;
+                    if (selectedPretrainedModel == "custom") {
+                        // 创建一个input
+                        var input = document.createElement("input");
+                        input.setAttribute("type", "text");
+                        input.setAttribute("id", "custom-pretrained-model");
+                        input.setAttribute("class", "form-control");
+                        input.setAttribute("placeholder", "请输入预训练模型的绝对路径");
+                        pretrainedModelSelect.parentNode.appendChild(input);
+                    }
+                    else {
+                        // 删除input
+                        var input = document.getElementById("custom-pretrained-model");
+                        if (input != null) {
+                            input.parentNode.removeChild(input);
+                        }
+                    }
+                });
             })
     });
 
+
+    const steps = document.querySelectorAll('.step-basenn');
+    console.log(steps);
+    steps.forEach((step) => {
+        // 点击steps中的step-num 或者 step-text，跳转到对应的轮播项，index 为step-num的值-1
+        step_text = step.getElementsByClassName('step-text')[0];
+        step_text.setAttribute("type","button")
+        step_text.addEventListener('click', function () {
+            var index = parseInt(step.getElementsByClassName('step-num')[0].textContent) - 1;
+            console.log(index);
+            $('#myCarousel').carousel(index);
+        });
+
+        step_num = step.getElementsByClassName('step-num')[0];
+        step_num.setAttribute("type","button")
+
+        step_num.addEventListener('click', function () {
+            var index = parseInt(step.getElementsByClassName('step-num')[0].textContent) - 1;
+            console.log(index);
+            $('#myCarousel').carousel(index);
+        });
+
+
+        $(step_text).mouseover(function(){
+            $(this).css("color","#3778ce");
+        });
+        $(step_text).mouseout(function(){
+            $(this).css("color","white");
+        });
+
+        $(step_num).mouseover(function(){
+            $(step_text).css("color","#3778ce");
+        });
+        $(step_num).mouseout(function(){
+            $(step_text).css("color","white");
+        });
+
+    });
+
+    document.getElementById('finish-train-btn').addEventListener('click', function () {
+        // 弹出convertModal
+        $('#trainFinishModal').modal('hide');
+        $('#convertModal').modal('show');
+    });
+    
+    document.getElementById('convert-btn').addEventListener('click', function () {
+    
+        // 显示转换中的模态框
+        $('#convertModal').modal('hide');
+        $('#convertLoadingModal').modal('show');
+        fetch('/basenn/convert_model', {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => response.json())
+            .then(data => {
+                console.log(data);
+                if (data.success) {
+                    $('#convertLoadingModal').modal('hide');
+                    convertFinishModal = document.getElementById('convertFinishModal');
+                    body = convertFinishModal.getElementsByClassName("modal-body")[0];
+                    p = body.getElementsByTagName("p")[0];
+                    p.innerHTML = data.message + ",转换后的模型保存路径为:" + data.onnxpath;
+                    // 设置自动换行
+                    p.style.wordWrap = "break-word";
+                    $('#convertFinishModal').modal('show');
+                }
+                else {
+                    convertFinishModal = document.getElementById('convertFinishModal');
+                    body = convertFinishModal.getElementsByClassName("modal-body")[0];
+                    p = body.getElementsByTagName("p")[0];
+                    p.innerHTML = data.message
+                    // 设置自动换行
+                    p.style.wordWrap = "break-word";
+                    $('#convertFinishModal').modal('show');
+                }
+            });
+        });
 });

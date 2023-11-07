@@ -93,13 +93,14 @@ def mmedu_train_task(child_conn):
     global mmedu_running_process
     print("training_thread")
     mmedu_shared_data['message'] = "正在训练 ……"
-    mmedu_running_process = subprocess.Popen(["..\env\python.exe","mmedu_code.py"],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    mmedu_shared_data['IsRunning'] = True
+    print("isRunning",mmedu_shared_data['IsRunning'])
+    mmedu_running_process = subprocess.Popen(["..\..\env\python.exe","mmedu_code.py"],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     print(mmedu_running_process.pid)
     child_conn.send(mmedu_running_process.pid)
     mmedu_running_process.communicate()
     print("subprocess end")
     mmedu_shared_data['IsRunning'] = False
-    print("isRunning",mmedu_shared_data['IsRunning'])
 
 
 def basenn_train_task():
@@ -109,7 +110,7 @@ def basenn_train_task():
     print("training_thread")
     print(global_varibles)
     print(basenn_shared_data)
-    basenn_running_process = subprocess.Popen(["..\env\python.exe","basenn_code.py"],stdout=subprocess.PIPE, stderr=subprocess.PIPE,encoding='gb18030')
+    basenn_running_process = subprocess.Popen(["..\..\env\python.exe","basenn_code.py"],stdout=subprocess.PIPE, stderr=subprocess.PIPE,encoding='gb18030')
     # 获取子进程输出
     basenn_poll_log_socket(basenn_running_process)
     basenn_running_process = None
@@ -123,8 +124,7 @@ def mmedu_poll_log_socket():
     time_stamp = mmedu_shared_data.get('time_stamp', '')
     last_line_num = 0
     print("log_task："+time_stamp)
-    isRunning = mmedu_shared_data.get('IsRunning', False)
-    log_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__))) + "\\checkpoints\\" +"mmedu_" +f"{time_stamp}"
+    log_path =back2pwd(__file__,2) + "\\my_checkpoints\\" + "mmedu_"+time_stamp
     while True:
         json_files = [x for x in os.listdir(log_path) if x.endswith('.json')]
         if len(json_files) != mmedu_shared_data['train_times']: # 防止多次训练时，没读取到最新的日志文件
@@ -133,9 +133,7 @@ def mmedu_poll_log_socket():
             log_path = os.path.join(log_path, json_files[-1])
             break
     print("log_path",log_path)
-    isRunning = mmedu_shared_data['IsRunning']
-    print("poll log is running?",isRunning)
-    while isRunning:
+    while mmedu_shared_data['IsRunning']:
         if os.path.exists(log_path):
             with open(log_path, 'r') as f:
                 lines = f.readlines()
@@ -143,11 +141,11 @@ def mmedu_poll_log_socket():
                     for line in lines[last_line_num:]:
                         log = json.loads(line)
                         log = json.dumps(log)
-                        mmedu_shared_data['message'] = log
                         socketio.emit('log',log)
                         print(log)
                     last_line_num = len(lines)
                 time.sleep(1)
+                # todo：如果log中的epoch等于设置的且mode为val，则停止poll log
         else:
             print("log_path not exist")
     print("log_task end")
@@ -238,7 +236,7 @@ def get_mmedu_code():
     print("get_mmedu_code")
     # make dir for checkpoints
     t = time.strftime('%Y%m%d_%H%M%S', time.localtime())
-    checkpoints_path = back2pwd(__file__,1) + "\\EasyDL2.0\\checkpoints\\" + "mmedu_"+t
+    checkpoints_path = back2pwd(__file__,2) + "\\my_checkpoints\\" + "mmedu_"+t
     print("checkpoints_path: ",checkpoints_path)
     os.mkdir(checkpoints_path)
     set_mmedu_checkpoints_path(checkpoints_path=checkpoints_path)
@@ -256,7 +254,7 @@ def get_basenn_code():
     print("get_basenn_code")
     # make dir for checkpoints
     t = time.strftime('%Y%m%d_%H%M%S', time.localtime())
-    checkpoints_path = back2pwd(__file__,1) + "\\EasyDL2.0\\checkpoints\\" + "basenn_"+t
+    checkpoints_path = back2pwd(__file__,2) + "\\my_checkpoints\\"  + "basenn_"+t
     print("checkpoints_path: ",checkpoints_path)
     os.mkdir(checkpoints_path)
     set_basenn_checkpoints_path(checkpoints_path=checkpoints_path)

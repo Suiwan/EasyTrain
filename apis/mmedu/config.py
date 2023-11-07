@@ -17,8 +17,9 @@ global_varibles = {
     "task": "classification",
     "model": "LeNet",
     "dataset": "hand_gray",
-    "dataset_path": back2pwd(__file__,3) + "\\datasets\\cls\\hand_gray",
-    "checkpoints_path": back2pwd(__file__,3) + "\\checkpoints",
+    "dataset_path": back2pwd(__file__,4) + "\\datasets\\cls\\hand_gray",
+    "checkpoints_path": back2pwd(__file__,4) + "\\my_checkpoints", # D:\\workspace\\XEdu\\EasyDL2.0\\checkpoints\\mmedu_20231106_161141
+    # "checkpoints_path":"D:\\workspace\\XEdu\\EasyDL2.0\\checkpoints\\mmedu_20231106_161141",
     "lr": 0.01,
     "epoch": 10,
     "batch_size": None,
@@ -89,13 +90,13 @@ def set_pretrained_path(pretrained_path):
 def get_all_dataset():
     res = {}
     # 获取cls文件夹下的所有文件夹
-    cls_dataset_path = back2pwd(__file__,3)  + "\\datasets\\cls"
+    cls_dataset_path = back2pwd(__file__,4)  + "\\datasets\\cls"
     cls_dataset_list = os.listdir(cls_dataset_path)
     # 过滤掉非文件夹
     cls_dataset_list = [x for x in cls_dataset_list if os.path.isdir(cls_dataset_path + "\\" + x)]
     res['cls'] = cls_dataset_list
     # 获取det文件夹下的所有文件夹
-    det_dataset_path = back2pwd(__file__,3)  + "\\datasets\\det"
+    det_dataset_path = back2pwd(__file__,4)  + "\\datasets\\det"
     det_dataset_list = os.listdir(det_dataset_path)
     # 过滤掉非文件夹
     det_dataset_list = [x for x in det_dataset_list if os.path.isdir(det_dataset_path + "\\" + x)]  
@@ -105,7 +106,7 @@ def get_all_dataset():
 
 
 def get_all_pretrained_model():  # note： 预训练模型统一按照要求放在checkpoints文件夹的对应task文件夹的对应数据集文件夹下
-    pwd = back2pwd(__file__,3) 
+    pwd = back2pwd(__file__,4) 
     # checkpoints文件夹
     checkpoints_path = pwd + "\\checkpoints"
     print(checkpoints_path)
@@ -132,7 +133,7 @@ def get_all_pretrained_model():  # note： 预训练模型统一按照要求放�
 
 
 def update_pretrained_path(pretrained_model):
-    pwd = back2pwd(__file__,3) 
+    pwd = back2pwd(__file__,4) 
     if pretrained_model == "None":
         global_varibles['pretrained_path'] = None
         return
@@ -146,7 +147,7 @@ def update_pretrained_path(pretrained_model):
 
 
 def update_dataset_path():
-    global_varibles["dataset_path"] = back2pwd(__file__,3)+ "\\datasets\\cls\\" + global_varibles["dataset"]
+    global_varibles["dataset_path"] = back2pwd(__file__,4)+ "\\datasets\\cls\\" + global_varibles["dataset"]
 
 
 def generate_mmedu_code():
@@ -167,7 +168,7 @@ def generate_mmedu_code():
         full_code = import_part + def_part + construct_part + class_part + dataset_part + save_part + train_part + entry_part
         # 写入另一个py文件
         with current_app.app_context():
-            with open("generated_code.py","w") as f:
+            with open("mmedu_code.py","w") as f:
                 f.write(full_code)
 
     elif global_varibles['task'] == 'classification':

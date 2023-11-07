@@ -32,8 +32,8 @@ def back2pwd(pwd,level):
 
 global_varibles = {
     "dataset":"iris\\iris_training.csv",
-    "dataset_path": back2pwd(__file__,3) + "\\datasets\\basenn\\workflow\\workflow_pose_train.csv",
-    "checkpoints_path": back2pwd(__file__,3) + "\\checkpoints", # save fold path
+    "dataset_path": back2pwd(__file__,4) + "\\datasets\\basenn\\workflow\\workflow_pose_train.csv",
+    "checkpoints_path": back2pwd(__file__,4) + "\\my_checkpoints", # save fold path
     "lr": 0.01,
     "epochs": 10,
     "network": [{'id': 1, 'type': 'linear', 'activation': 'relu', 'size': (52, 120)}, 
@@ -59,7 +59,7 @@ def get_all_pth(pwd):
 
 
 def get_all_pretrained_model():
-    pwd = back2pwd(__file__,3) + "\\checkpoints\\basenn_model"+ "\\" + global_varibles['dataset'].split("\\")[0]
+    pwd = back2pwd(__file__,4) + "\\checkpoints\\basenn_model"+ "\\" + global_varibles['dataset'].split("\\")[0]
     return get_all_pth(pwd)
     
 
@@ -84,6 +84,8 @@ def set_lr(lr):
 def set_epochs(epochs):
     global_varibles["epochs"] = epochs
 
+def set_pretrained_path(pretrained_path):
+    global_varibles["pretrained_path"] = pretrained_path
 
 def set_metrics(metrics):
     global_varibles["metrics"] = metrics
@@ -104,17 +106,17 @@ def update_global_varibles(**kwargs):
     return True
 
 def update_pretrained_path(pretrained):
-    pwd = back2pwd(__file__,3) 
+    pwd = back2pwd(__file__,4) 
     pretrained_path = pwd + "\\checkpoints\\" + global_varibles['dataset'] + "\\" + pretrained
     global_varibles['pretrained_path'] = pretrained_path
 
 def update_dataset_path():
-    global_varibles["dataset_path"] = back2pwd(__file__,3) + "\\datasets\\" + global_varibles["dataset"]
+    global_varibles["dataset_path"] = back2pwd(__file__,4) + "\\datasets\\" + global_varibles["dataset"]
 
 
 def get_all_dataset():
     dataset_list = []
-    pwd = back2pwd(__file__,3) + "\\datasets\\basenn"
+    pwd = back2pwd(__file__,4) + "\\datasets\\basenn"
     dirs = os.listdir(pwd)
     # print(dirs)
     for dir in dirs:
@@ -125,7 +127,7 @@ def get_all_dataset():
     return dataset_list
 
 def update_dataset_path():
-    global_varibles["dataset_path"] = back2pwd(__file__,3) + "\\datasets\\basenn\\" + global_varibles["dataset"]
+    global_varibles["dataset_path"] = back2pwd(__file__,4) + "\\datasets\\basenn\\" + global_varibles["dataset"]
 
 
 

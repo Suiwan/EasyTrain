@@ -85,10 +85,17 @@ def set_advance_cfg():
         pretrained = request_data["pretrained"]
         set_loss(loss=loss)
         set_metrics(metrics=metrics)
+
         if pretrained != "None":
             update_pretrained_path(pretrained=pretrained)
         print("global_varibles now ",global_varibles)
-    
+        if pretrained.find('\\') == -1:
+            # pretrained_model不是一个路径，而是一个预训练模型的名字，则需要更新pretrained_path
+            if pretrained != "None":
+                update_pretrained_path(pretrained=pretrained)
+        else:
+            # pretrained_model是一个路径，则直接更新pretrained_path
+            set_pretrained_path(pretrained_path=pretrained)
     return jsonify({'message': '设置成功!', 'success': True})
 
 
@@ -109,3 +116,16 @@ def get_epoch():
 def get_checkpoints_path():
     return jsonify({'checkpoints_path': global_varibles['checkpoints_path']})
 
+@basenn_bp.route('/convert_model',methods=['GET'])
+def convert_model():
+    save_path = global_varibles['checkpoints_path']
+    # 获取save_path下的.pth文件
+    import os
+    pth_files = [x for x in os.listdir(save_path) if x.endswith('.pth')]
+    print("pth_files",pth_files)
+    pth_path = os.path.join(save_path,pth_files[-1])
+    print("pth_path",pth_path)
+    from BaseNN import nn
+    nn_model = nn()
+    nn_model.convert(checkpoint=pth_path, out_file=f'{pth_path.split(".")[0]}.onnx')
+    return jsonify({'message': '转换成功!', 'success': True,'onnxpath':f'{pth_path.split(".")[0]}.onnx'})

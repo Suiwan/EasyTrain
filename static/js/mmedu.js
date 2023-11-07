@@ -113,6 +113,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
         // 现在，您可以在JavaScript代码中使用modelList
         console.log(modelList);
+        // 跳到下一个轮播项
+        nextCarouselItem();
 
 
     });
@@ -120,7 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 });
 // 选择模型
-    document.getElementById('model-submit-btn').addEventListener('click', function () {
+document.getElementById('model-submit-btn').addEventListener('click', function () {
     // 获取选中的任务类型
     var selectedModel = document.getElementById('model-select').value;
     // 构建请求数据
@@ -146,36 +148,33 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
     updateCarouselContent(null, selectedModel, null);
+    // 跳到下一个轮播项
+    nextCarouselItem();
 
-    });
+});
 
 
 // 更新轮播项的内容
 function updateCarouselContent(task, model, dataset) {
-    var carouselItems = document.querySelectorAll('.carousel-item');
 
-    // 根据任务类型和模型来更新轮播项的内容
-    for (var i = 0; i < carouselItems.length; i++) {
-        if (i === 0) {
-            // 第一个轮播项，根据任务类型更新内容
-            if (task) {
-                var subtitle = carouselItems[i].querySelector('.subtitle');
-                subtitle.textContent = '当前选择的任务是：' + task;
-                // reload the page
-            }
-        } else if (i === 1) {
-            // 第二个轮播项，根据模型更新内容
-            if (model) {
-                var subtitle = carouselItems[i].querySelector('.subtitle');
-                subtitle.textContent = '当前选择的模型是：' + model;
-            }
+    var subtitleTasks = document.getElementsByClassName('subtitle-task');
+    var subtitleModels = document.getElementsByClassName('subtitle-model');
+    var subtitleDatasets = document.getElementsByClassName('subtitle-dataset');
+
+    if (task != null) {
+        for (var i = 0; i < subtitleTasks.length; i++) {
+            subtitleTasks[i].textContent = "已选择的任务类型：" + task;
         }
-        else if (i === 2) {
-            // 第三个轮播项，根据模型更新内容
-            if (dataset) {
-                var subtitle = carouselItems[i].querySelector('.subtitle');
-                subtitle.textContent = '当前选择的数据集是：' + dataset;
-            }
+
+    }
+    if (model != null) {
+        for (var i = 0; i < subtitleModels.length; i++) {
+            subtitleModels[i].textContent = "已选择的模型：" + model;
+        }
+    }
+    if (dataset != null) {
+        for (var i = 0; i < subtitleDatasets.length; i++) {
+            subtitleDatasets[i].textContent = "已选择的数据集：" + dataset;
         }
     }
 }
@@ -266,6 +265,8 @@ document.getElementById('dataset-submit-btn').addEventListener('click', function
             console.error(error);
         });
     updateCarouselContent(null, null, selectedDataset);
+    // 跳到下一个轮播项
+    nextCarouselItem();
 
 });
 
@@ -295,22 +296,27 @@ document.getElementById('code-generate-btn').addEventListener('click', function 
         });
 });
 
+    // 给goto-train-btn绑定事件，点击跳转到训练页面
+    document.getElementById('goto-train-btn').addEventListener('click', function () {
+        nextCarouselItem();
+    });
+
 // 点击复制代码到剪贴板
 $(function () { $("[data-toggle='tooltip']").tooltip(); });
-function copyCode2Clipboard(){
+function copyCode2Clipboard() {
     var clipboard = new ClipboardJS('#code-copy-btn');
-    
-    var clipbtn  = document.getElementById('code-copy-btn');
 
-    clipboard.on('success', function(e) {
+    var clipbtn = document.getElementById('code-copy-btn');
+
+    clipboard.on('success', function (e) {
         // alert("代码已经复制到剪贴板!");
         e.clearSelection();
         // clipbtn.setAttribute('title','copy to clipboard');
         $('#code-copy-btn').tooltip('show')
 
-        setTimeout(function(){
+        setTimeout(function () {
             $('#code-copy-btn').tooltip('hide')
-        },1000);
+        }, 1000);
 
 
     });
@@ -354,6 +360,20 @@ document.getElementById("advset-submit-btn").addEventListener("click", function 
     var device = deviceSelect.options[deviceSelect.selectedIndex].value;
     var pretrainedSelect = document.getElementById("pretrained-select");
     var pretrained = pretrainedSelect.options[pretrainedSelect.selectedIndex].value;
+
+    if (pretrained == "custom") {
+        pretrained = document.getElementById("custom-pretrained-model").value;
+        // 如果自定义的预训练模型为空，就报错
+        if (pretrained == "") {
+            alert("请输入自定义的预训练模型路径!");
+            return;
+        }
+        // 如果不是以.pth结尾，就报错
+        if (pretrained.slice(-4) != ".pth") {
+            alert("自定义的预训练模型必须是.pth文件!");
+            return;
+        }
+    }
 
     var requestData = {
         "class_num": classNum,
@@ -414,7 +434,7 @@ document.getElementById('start-train-btn').addEventListener('click', function ()
             'Content-Type': 'application/json'
         },
     })
-    
+
     // 按钮被禁用
     document.getElementById('start-train-btn').disabled = true;
 
@@ -430,32 +450,72 @@ document.getElementById('stop-train-btn').addEventListener('click', function () 
             'Content-Type': 'application/json'
         },
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        // 训练按钮被启用
-        document.getElementById('start-train-btn').disabled = false;
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            // 训练按钮被启用
+            document.getElementById('start-train-btn').disabled = false;
 
-        // 停止轮询
-        // clearInterval(intervalId);
-        lossChart.hideLoading();
-        accChart.hideLoading();
-        if(data.success){
-            $('#trainTerminateModal').modal('show');
-        }
-        else{
-            trainTerminateModal = document.getElementById('trainTerminateModal');
-            body = trainTerminateModal.getElementsByClassName("modal-body")[0];
-            p = body.getElementsByTagName("p")[0];
-            p.innerHTML = data.message;
-            // 设置自动换行
-            p.style.wordWrap = "break-word";
-            $('#trainTerminateModal').modal('show');
-        }
-    });
+            // 停止轮询
+            // clearInterval(intervalId);
+            lossChart.hideLoading();
+            accChart.hideLoading();
+            if (data.success) {
+                $('#trainTerminateModal').modal('show');
+            }
+            else {
+                trainTerminateModal = document.getElementById('trainTerminateModal');
+                body = trainTerminateModal.getElementsByClassName("modal-body")[0];
+                p = body.getElementsByTagName("p")[0];
+                p.innerHTML = data.message;
+                // 设置自动换行
+                p.style.wordWrap = "break-word";
+                $('#trainTerminateModal').modal('show');
+            }
+        });
 });
 
+document.getElementById('finish-train-btn').addEventListener('click', function () {
+    // 弹出convertModal
+    $('#trainFinishModal').modal('hide');
+    $('#convertModal').modal('show');
+});
 
+document.getElementById('convert-btn').addEventListener('click', function () {
+
+    // 显示转换中的模态框
+    $('#convertModal').modal('hide');
+    $('#convertLoadingModal').modal('show');
+    fetch('/mmedu/convert_model', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            if (data.success) {
+                $('#convertLoadingModal').modal('hide');
+                convertFinishModal = document.getElementById('convertFinishModal');
+                body = convertFinishModal.getElementsByClassName("modal-body")[0];
+                p = body.getElementsByTagName("p")[0];
+                p.innerHTML = data.message + ",转换后的模型保存路径为:" + data.onnxpath;
+                // 设置自动换行
+                p.style.wordWrap = "break-word";
+                $('#convertFinishModal').modal('show');
+            }
+            else {
+                convertFinishModal = document.getElementById('convertFinishModal');
+                body = convertFinishModal.getElementsByClassName("modal-body")[0];
+                p = body.getElementsByTagName("p")[0];
+                p.innerHTML = data.message
+                // 设置自动换行
+                p.style.wordWrap = "break-word";
+                $('#convertFinishModal').modal('show');
+            }
+        });
+    });
 
 
 // 轮询线程状态
@@ -486,7 +546,7 @@ function pollThreadStatus() {
 var G_totalEpoch = 0;
 var G_checkpoints_path = "";
 
-function get_epoch(){
+function get_epoch() {
     // 从后端获取总epoch
     fetch('/mmedu/get_epoch', {
         method: 'GET',
@@ -494,17 +554,17 @@ function get_epoch(){
             'Content-Type': 'application/json'
         },
     })
-    .then(response => response.json())
-    .then(data => {
-        console.log(data);
-        G_totalEpoch = data['epoch'];
-    });
+        .then(response => response.json())
+        .then(data => {
+            console.log(data);
+            G_totalEpoch = data['epoch'];
+        });
 }
 
 
 
 
-function get_checkpoints_path(){
+function get_checkpoints_path() {
 
     var checkpoints_path = "";
     // 从后端获取checkpoints_path
@@ -514,12 +574,12 @@ function get_checkpoints_path(){
             'Content-Type': 'application/json'
         },
     })
-    .then(response => response.json())
-    .then(data => {
-        checkpoints_path = data['checkpoints_path'];
-        setTrainFinishModal(checkpoints_path);
-    }
-    );
+        .then(response => response.json())
+        .then(data => {
+            checkpoints_path = data['checkpoints_path'];
+            setTrainFinishModal(checkpoints_path);
+        }
+        );
 
     return checkpoints_path;
 }
@@ -528,8 +588,8 @@ function get_checkpoints_path(){
 
 // console.log(G_checkpoints_path);
 const socket = io.connect('http://localhost:5000');
-function poll_log(){
-// 连接socket
+function poll_log() {
+    // 连接socket
 
     lossList = []
     accList = []
@@ -545,131 +605,140 @@ function poll_log(){
     accChart.showLoading();
 
     flag = true;
-socket.on('log', (log) => {
-    // console.log(log);
-    if(flag){
-        lossChart.hideLoading();
-        accChart.hideLoading();
-        // 显示图表的坐标轴
-        lossChart.setOption(lossOption);
-        accChart.setOption(accOption);
-        flag = false;
-    }
-
-
-
-    // 如果跟上一次的数据不一致，就加入
-    if (total_log_data.length == 0 || total_log_data[total_log_data.length - 1] != log) {
-        total_log_data.push(log);
-        logJsno = JSON.parse(log);
-
-        // 获取logJson中的所有key
-        var keys = Object.keys(logJsno);
-        if ("accuracy_top-1" in logJsno){
-            epoch = logJsno['epoch'];
-            mode = logJsno['mode'];
-            loss = logJsno['loss'];
-            acc = logJsno['accuracy_top-1']; // 不一定是top-1
-        }
-        else{
-            epoch = logJsno['epoch'];
-            mode = logJsno['mode'];
-            loss = logJsno['loss'];
-            acc = logJsno['accuracy_top-5'];
-        }
-
-
-        if (mode == "train" && epoch==currentEpoch){
-            temp_loss.push(loss);
-            console.log(loss)
-        }
-        else if (mode=="val" && epoch==currentEpoch){
-            accList.push(acc)
-            console.log("accList",acc);
-            console.log("temp_loss",temp_loss);
-            // 求temp_loss的平均值
-            var sum = 0;
-            for (var i=0;i<temp_loss.length;i++){
-                sum += temp_loss[i];
-            }
-            var avgLoss = sum/temp_loss.length;
-            // 设置进度条
-            setTrainProgressBar(epoch);
-            // 更新图表
-            lossOption.series[0].data.push(avgLoss);
+    socket.on('log', (log) => {
+        // console.log(log);
+        if (flag) {
+            lossChart.hideLoading();
+            accChart.hideLoading();
+            // 显示图表的坐标轴
             lossChart.setOption(lossOption);
-            accOption.series[0].data.push(acc);
             accChart.setOption(accOption);
-
-            console.log("avgloss",avgLoss);
-            // 清空temp_loss
-            temp_loss = [];
-            lossList.push(avgLoss);
-            currentEpoch+=1
+            flag = false;
         }
 
-        if (mode == "val" && epoch==G_totalEpoch){ // 这段代码逻辑有点问题，其实不应该发请求
-            // console.log("应该停止训练模型了");
-            // fetch('/mmedu/stop_thread', {
-            //     method: 'GET',
-            //     headers: {
-            //         'Content-Type': 'application/json'
-            //     },
-            // })
-            // .then(response => response.json())
-            // .then(data => {
-            //     console.log(data);                
-            // });
-            console.log(lossList);
-            console.log(accList);
-            // 清空lossList,accList
-            lossList = [];
-            accList = [];
-            currentEpoch = 1;
-            get_checkpoints_path();
-            invervalEpoch = Math.floor(G_totalEpoch/10);
-            // 最后绘制图表的x轴
-            lossOption.xAxis.data = [];
-            accOption.xAxis.data = [];
-            for (var i=1;i<=G_totalEpoch;i++){
-                if (i%invervalEpoch==0){
-                    lossOption.xAxis.data.push(i.toString());
-                    accOption.xAxis.data.push(i.toString());
+
+
+        // 如果跟上一次的数据不一致，就加入
+        if (total_log_data.length == 0 || total_log_data[total_log_data.length - 1] != log) {
+            total_log_data.push(log);
+            logJsno = JSON.parse(log);
+
+            // 获取logJson中的所有key
+            var keys = Object.keys(logJsno);
+            if ("accuracy_top-1" in logJsno) {
+                epoch = logJsno['epoch'];
+                mode = logJsno['mode'];
+                loss = logJsno['loss'];
+                acc = logJsno['accuracy_top-1']; // 不一定是top-1
+            }
+            else {
+                epoch = logJsno['epoch'];
+                mode = logJsno['mode'];
+                loss = logJsno['loss'];
+                acc = logJsno['accuracy_top-5'];
+            }
+
+
+            if (mode == "train" && epoch == currentEpoch) {
+                temp_loss.push(loss);
+                console.log(loss)
+            }
+            else if (mode == "val" && epoch == currentEpoch) {
+                accList.push(acc)
+                console.log("accList", acc);
+                console.log("temp_loss", temp_loss);
+                // 求temp_loss的平均值
+                var sum = 0;
+                for (var i = 0; i < temp_loss.length; i++) {
+                    sum += temp_loss[i];
                 }
+                var avgLoss = sum / temp_loss.length;
+                // 设置进度条
+                setTrainProgressBar(epoch);
+                // 更新图表
+                lossOption.series[0].data.push(avgLoss);
+                lossChart.setOption(lossOption);
+                accOption.series[0].data.push(acc);
+                accChart.setOption(accOption);
+
+                console.log("avgloss", avgLoss);
+                // 清空temp_loss
+                temp_loss = [];
+                lossList.push(avgLoss);
+                currentEpoch += 1
             }
-            lossChart.setOption(lossOption);
-            accChart.setOption(accOption);
-            // 训练按钮被启用
-            document.getElementById('start-train-btn').disabled = false;
+
+            if (mode == "val" && epoch == G_totalEpoch) { // 这段代码逻辑有点问题，其实不应该发请求
+                // console.log("应该停止训练模型了");
+                // fetch('/mmedu/stop_thread', {
+                //     method: 'GET',
+                //     headers: {
+                //         'Content-Type': 'application/json'
+                //     },
+                // })
+                // .then(response => response.json())
+                // .then(data => {
+                //     console.log(data);                
+                // });
+                console.log(lossList);
+                console.log(accList);
+                // 清空lossList,accList
+                lossList = [];
+                accList = [];
+                currentEpoch = 1;
+                get_checkpoints_path();
+                invervalEpoch = Math.floor(G_totalEpoch / 10);
+                // 最后绘制图表的x轴
+                lossOption.xAxis.data = [];
+                accOption.xAxis.data = [];
+                for (var i = 1; i <= G_totalEpoch; i++) {
+                    if (i % invervalEpoch == 0) {
+                        lossOption.xAxis.data.push(i.toString());
+                        accOption.xAxis.data.push(i.toString());
+                    }
+                }
+                lossChart.setOption(lossOption);
+                accChart.setOption(accOption);
+                // 训练按钮被启用
+                document.getElementById('start-train-btn').disabled = false;
+
+
+                // 自动发送请求进行模型转换
+                fetch('/mmedu/convert_model', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                })
+
+            }
 
         }
-
-    }
-})
+    })
 }
 
 
 
-function setTrainProgressBar(epoch){
-    var percent = epoch/G_totalEpoch*100;
+function setTrainProgressBar(epoch) {
+    var percent = epoch / G_totalEpoch * 100;
     var progressBar = document.getElementById('progress-bar');
-    progressBar.setAttribute("aria-valuenow",percent.toString());
-    progressBar.style.width = percent.toString()+"%";
+    progressBar.setAttribute("aria-valuenow", percent.toString());
+    progressBar.style.width = percent.toString() + "%";
 }
 
-function clearTrainProgressBar(){
+function clearTrainProgressBar() {
     var progressBar = document.getElementById('progress-bar');
-    progressBar.setAttribute("aria-valuenow","0");
+    progressBar.setAttribute("aria-valuenow", "0");
     progressBar.style.width = "0%";
 }
 
-function setTrainFinishModal(checkpoints_path){
+function setTrainFinishModal(checkpoints_path) {
     console.log("setTrainFinishModal");
     var trainFinishModal = document.getElementById('trainFinishModal');
-    trainFinishModal.setAttribute("aria-labelledby","Train Finish");
+    trainFinishModal.setAttribute("aria-labelledby", "Train Finish");
     body = trainFinishModal.getElementsByClassName("modal-body")[0];
     p = body.getElementsByTagName("p")[0];
-    p.innerHTML = "训练已经结束，模型权重和日志保存路径为:"+checkpoints_path;
+    p.innerHTML = "训练已经结束，模型权重和日志保存路径为:" + checkpoints_path;
     // 设置自动换行
     p.style.wordWrap = "break-word";
     $('#trainFinishModal').modal('show');
@@ -696,21 +765,95 @@ document.getElementById('set-other-params-btn').addEventListener('click', functi
             'Content-Type': 'application/json'
         },
     })
-    .then(response => response.json())
-    .then(data => {
-        // console.log(data);
-        // 将data中的模型列表添加到select中
-        var pretrainedModelSelect = document.getElementById('pretrained-select');
-        pretrainedModelSelect.innerHTML = '';
-        var option_none = document.createElement("option");
-        option_none.text = "不使用";
-        option_none.value = "None";
-        pretrainedModelSelect.appendChild(option_none);
-        for (var i = 0; i < data.length; i++) {
-            var option = document.createElement("option");
-            option.text = data[i];
-            option.value = data[i];
-            pretrainedModelSelect.appendChild(option);
-        }
-    })
+        .then(response => response.json())
+        .then(data => {
+            // console.log(data);
+            // 将data中的模型列表添加到select中
+            var pretrainedModelSelect = document.getElementById('pretrained-select');
+            pretrainedModelSelect.innerHTML = '';
+            var option_none = document.createElement("option");
+            option_none.text = "不使用";
+            option_none.value = "None";
+            pretrainedModelSelect.appendChild(option_none);
+            var option_custom = document.createElement("option");
+            option_custom.text = "自定义";
+            option_custom.value = "custom";
+            pretrainedModelSelect.appendChild(option_custom);
+            for (var i = 0; i < data.length; i++) {
+                var option = document.createElement("option");
+                option.text = data[i];
+                option.value = data[i];
+                pretrainedModelSelect.appendChild(option);
+            }
+
+            // 如果选择了自定义，就加入一个自定义的输入框
+            pretrainedModelSelect.addEventListener('change', function () {
+                var selectedPretrainedModel = pretrainedModelSelect.options[pretrainedModelSelect.selectedIndex].value;
+                if (selectedPretrainedModel == "custom") {
+                    // 创建一个input
+                    var input = document.createElement("input");
+                    input.setAttribute("type", "text");
+                    input.setAttribute("id", "custom-pretrained-model");
+                    input.setAttribute("class", "form-control");
+                    input.setAttribute("placeholder", "请输入预训练模型的绝对路径");
+                    pretrainedModelSelect.parentNode.appendChild(input);
+                }
+                else {
+                    // 删除input
+                    var input = document.getElementById("custom-pretrained-model");
+                    if (input != null) {
+                        input.parentNode.removeChild(input);
+                    }
+                }
+            });
+        })
+
+
+
+
 });
+     /*<div class="step" type="button">
+                        <div class="step-progress left done">
+                            <div class="step-line"></div>
+                            <span class="step-num">1</span>
+                        </div>
+                        <div class="step-text">
+                            <span>任务选择</span>
+                        </div>
+                    </div> */
+    
+    const steps = document.querySelectorAll('.step');
+    console.log(steps);
+    steps.forEach((step) => {
+        // 点击steps中的step-num 或者 step-text，跳转到对应的轮播项，index 为step-num的值-1
+        step_text = step.getElementsByClassName('step-text')[0];
+        step_text.setAttribute("type","button")
+        step_text.addEventListener('click', function () {
+            var index = parseInt(step.getElementsByClassName('step-num')[0].textContent) - 1;
+            console.log(index);
+            $('#myCarousel').carousel(index);
+        });
+
+        step_num = step.getElementsByClassName('step-num')[0];
+        step_num.setAttribute("type","button")
+
+        step_num.addEventListener('click', function () {
+            var index = parseInt(step.getElementsByClassName('step-num')[0].textContent) - 1;
+            console.log(index);
+            $('#myCarousel').carousel(index);
+        });
+        $(step_text).mouseover(function(){
+            $(this).css("color","#3778ce");
+        });
+        $(step_text).mouseout(function(){
+            $(this).css("color","white");
+        });
+
+        $(step_num).mouseover(function(){
+            $(step_text).css("color","#3778ce");
+        });
+        $(step_num).mouseout(function(){
+            $(step_text).css("color","white");
+        });
+        
+    });

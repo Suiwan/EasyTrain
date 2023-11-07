@@ -9,18 +9,10 @@
     <!-- 引入 Bootstrap CSS -->
     <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='js/highlight/styles/github.min.css')}}">
-    <title>EasyDL2.0</title>
+    <title>EasyTrain</title>
 </head>
 
 <body>
-    <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link " href="/">MMEdu</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link active" href="/basenn">BaseNN</a>
-        </li>
-      </ul>
     <!-- 使用 Bootstrap 轮播组件 -->
     <div id="myCarousel" class="carousel slide" data-bs-ride="false" data-interval="10000000" >
         <!-- 轮播指示符 -->
@@ -35,9 +27,17 @@
             <!-- 数据集选择页面 -->
             <div class="carousel-item active" style="background-color: #095a187e;">
                 <!-- <h1 class="title">Easy Train</h1> -->
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link " href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <div class="steps">
                     <!-- 第一部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress left done">
                             <div class="step-line"></div>
                             <span class="step-num">1</span>
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                     <!-- 第三部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress">
                             <div class="step-line"></div>
                             <span class="step-num">2</span>
@@ -57,7 +57,7 @@
                         </div>
                     </div>
                     <!-- 第四部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress ">
                             <div class="step-line"></div>
                             <span class="step-num">3</span>
@@ -66,7 +66,7 @@
                             <span>参数设置</span>
                         </div>
                     </div>
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress right">
                             <div class="step-line"></div>
                             <span class="step-num">4</span>
@@ -84,17 +84,25 @@
                             <select class="form-select form-control" id="dataset-select" name="dataset">
                             </select>
                         </div>
-                        <button type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal" id="dataset-submit-btn">
-                            提交
+                        <button type="button" class="btn btn-light btn-lg"  id="dataset-submit-btn">
+                            下一步
                         </button>
                     </form>
                 </div>
             </div>
             <!-- 模型搭建页面 -->
             <div class="carousel-item" style="background-color: #095a187e;">
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link " href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <div class="steps">
                     <!-- 第一部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress left done">
                             <div class="step-line"></div>
                             <span class="step-num">1</span>
@@ -104,7 +112,7 @@
                         </div>
                     </div>
                     <!-- 第三部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress done">
                             <div class="step-line"></div>
                             <span class="step-num">2</span>
@@ -114,7 +122,7 @@
                         </div>
                     </div>
                     <!-- 第四部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress ">
                             <div class="step-line"></div>
                             <span class="step-num">3</span>
@@ -123,7 +131,7 @@
                             <span>参数设置</span>
                         </div>
                     </div>
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress right">
                             <div class="step-line"></div>
                             <span class="step-num">4</span>
@@ -134,9 +142,11 @@
                     </div>
                 </div>
                 <div class="network-container">
-                    
-                    <button id="addLayer" class="btn btn-light btn-lg" >添加神经网络层</button>
-                    <button id="network-submit-btn" class="btn btn-light btn-lg" style="display: block;">保存</button>
+                    <div>
+                        <button id="addLayer" class="btn btn-light btn-lg" style="margin:10px;" >添加网络层</button>
+                        <button id="network-submit-btn" class="btn btn-light btn-lg" style="display: block;margin-top:10px;margin-left: 40px;">保存</button>
+                    </div>
+
                     <div class="network">
                     </div>
                 </div>
@@ -145,9 +155,17 @@
             <!-- 参数设置和代码生成页面 -->
             <div class="carousel-item" style="background-color: #095a187e;">
                 <!-- <h1 class="title">Easy Train</h1> -->
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link " href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <div class="steps">
                     <!-- 第一部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress left done">
                             <div class="step-line"></div>
                             <span class="step-num">1</span>
@@ -157,7 +175,7 @@
                         </div>
                     </div>
                     <!-- 第三部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress done">
                             <div class="step-line"></div>
                             <span class="step-num">2</span>
@@ -167,7 +185,7 @@
                         </div>
                     </div>
                     <!-- 第四部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress done">
                             <div class="step-line"></div>
                             <span class="step-num">3</span>
@@ -176,7 +194,7 @@
                             <span>参数设置</span>
                         </div>
                     </div>
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress right">
                             <div class="step-line"></div>
                             <span class="step-num">4</span>
@@ -213,7 +231,7 @@
                                     </li>
                                 </ul>
                                 <div class="card-footer" style="padding: 0.5rem 1rem; width: 20rem;">
-                                    <input type="submit" value="提交" class="btn btn-light btn-lg"  id="cfg-submit-btn">
+                                    <input type="submit" value="确认" class="btn btn-light btn-lg"  id="cfg-submit-btn">
                                 </div>
                             </form>
                         </div>
@@ -236,7 +254,9 @@
                 <button type="button" class="btn btn-light btn-lg"  id="code-generate-btn">
                     生成代码
                 </button>
-
+                <button type="button" class="btn btn-light btn-lg"  id="goto-train-btn">
+                    进入训练
+                </button>
                 <button type="button" id="code-copy-btn" data-clipboard-target = ".python" data-toggle="tooltip" data-placement="top" title="copied!" data-trigger="manual" >
                     <img src="{{url_for('static',filename='assets/clipboard-plus.svg')}}" alt="Copy to clipboard" style="width: 25px;height: 25px;">
                 </button>
@@ -245,9 +265,17 @@
             <!-- 模型训练页面 -->
             <div class="carousel-item" style="background-color: #095a187e;">
                 <!-- <h1 class="title">Easy Train</h1> -->
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link " href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <div class="steps">
                     <!-- 第一部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress left done">
                             <div class="step-line"></div>
                             <span class="step-num">1</span>
@@ -257,7 +285,7 @@
                         </div>
                     </div>
                     <!-- 第三部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress done">
                             <div class="step-line"></div>
                             <span class="step-num">2</span>
@@ -267,7 +295,7 @@
                         </div>
                     </div>
                     <!-- 第四部分 -->
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress done">
                             <div class="step-line"></div>
                             <span class="step-num">3</span>
@@ -276,7 +304,7 @@
                             <span>参数设置</span>
                         </div>
                     </div>
-                    <div class="step">
+                    <div class="step-basenn">
                         <div class="step-progress right done">
                             <div class="step-line"></div>
                             <span class="step-num">4</span>
@@ -287,7 +315,7 @@
                     </div>
                 </div>
                 <!-- 分割线 -->
-                <div class="vertical-divider-train"></div>
+                <!-- <div class="vertical-divider-train"></div> -->
                 
                 <div id="loss-chart"></div>
                 <div id="acc-chart"></div>
@@ -307,11 +335,11 @@
             </div>
 
         <!-- 左右切换按钮 -->
-        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev" style="width: 10%;">
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev" style="width: 10%;z-index: 1;">
             <span class="carousel-control-prev-icon" aria-hidden="true"></span>
             <span class="sr-only">Previous</span>
         </a>
-        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next" style="width: 10%;">
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next" style="width: 10%;z-index: 1;">
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="sr-only">Next</span>
         </a>
@@ -442,12 +470,65 @@
                     <p id="modal-message">训练已经结束，模型权重和日志已存储至……</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="btn-modal-close">好的</button>
+                    <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="finish-train-btn">好的</button>
                 </div>
             </div>
         </div>
 
     </div>
+
+    <div class="modal" id="convertModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">模型转换</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-message" style="word-wrap: break-word;">模型训练已经完成，是否要将模型格式转换为onnx格式？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="convert-btn">是</button>
+                    <button type="button" class="btn btn-secondary modal-close-btn" data-dismiss="modal" id="btn-modal-close">否</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal" id="convertFinishModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <!-- 模态框头部 -->
+                <div class="modal-header">
+                    <h4 class="modal-title">模型转换完成！</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <p id="modal-message"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="btn-modal-close">好的</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+            <div class="modal" id="convertLoadingModal">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <!-- 模态框头部 -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">模型转换中……</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                            <p id="modal-message">模型转换中……请稍候</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
         <!-- 训练中止提示-->
         <div class="modal" id="trainTerminateModal">

@@ -8,18 +8,18 @@
     <!-- 引入 Bootstrap CSS -->
     <link rel="stylesheet" href="{{url_for('static',filename='css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{url_for('static',filename='js/highlight/styles/github.min.css')}}">
-    <title>EasyDL2.0</title>
+    <title>EasyTrain</title>
 </head>
 
 <body>
-    <ul class="nav nav-tabs">
+    <!-- <ul class="nav nav-tabs  nav-pills justify-content-center" style="background-color: whitesmoke;">
         <li class="nav-item">
           <a class="nav-link active" href="/">MMEdu</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/basenn">BaseNN</a>
         </li>
-      </ul>
+      </ul> -->
     <!-- 使用 Bootstrap 轮播组件 -->
     <div id="myCarousel" class="carousel slide" data-bs-ride="false" data-interval="10000000" >
         <!-- 轮播指示符 -->
@@ -33,10 +33,18 @@
         <!-- 轮播图片 -->
         <div class="carousel-inner">
             <div class="carousel-item active" style="background-color: #095a187e;">
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <!-- <h1 class="title">Easy Train</h1> -->
                 <div class="steps">
                     <!-- 第一部分 -->
-                    <div class="step">
+                    <div class="step" type="button">
                         <div class="step-progress left done">
                             <div class="step-line"></div>
                             <span class="step-num">1</span>
@@ -85,10 +93,10 @@
                         </div>
                     </div>
                 </div>
-                <h3 class="subtitle">当前选择的任务是：{{task}}</h3>
+                <h3 class="subtitle">已选择的任务：{{task}}</h3>
                 <div class="container mt-3 position-relative">
                     <form id="task-select-form">
-                        <label  class="label-select">选择您要完成的任务：</label>
+                        <label  class="label-select">选择您要训练的任务：</label>
                         <div class="mb-3">
                             <select class="form-select form-control" id="task-select" name="task">
                                 <option value="classification">分类任务</option>
@@ -97,14 +105,22 @@
                             </select>
                         </div>
                         <!-- 使用 Bootstrap 按钮来触发模态框 -->
-                        <button type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal" id="task-submit-btn">
-                            提交
+                        <button type="button" class="btn btn-light btn-lg" id="task-submit-btn">
+                            下一步
                         </button>
                     </form>
                 </div>
             </div>
             <div class="carousel-item" style="background-color: #095a187e;" > 
                 <!-- <h1 class="title">Easy Train</h1> -->
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <div class="steps">
                     <!-- 第一部分 -->
                     <div class="step">
@@ -156,7 +172,8 @@
                         </div>
                     </div>
                 </div>
-                <h3 class="subtitle">当前选择的模型是：{{model}}</h3>
+                <h3 class="subtitle-task" style="top: 15%;">已选择的任务：{{task}}</h3>
+                <h3 class="subtitle-model" style="top: 18%;">已选择的模型：{{model}}</h3>
                 <div class="container mt-3 position-relative">
                     <form id="model-select-form">
                         <label  class="label-select">选择您要使用的模型：</label>
@@ -168,8 +185,8 @@
                                 <option value="ResNet50">ResNet50</option>
                             </select>
                         </div>
-                        <button type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal" id="model-submit-btn">
-                            提交
+                        <button type="button" class="btn btn-light btn-lg"  id="model-submit-btn">
+                            下一步
                         </button>
                     </form>
                 </div>
@@ -177,6 +194,14 @@
             <!-- 数据集选择页面 -->
             <div class="carousel-item" style="background-color: #095a187e;">
                 <!-- <h1 class="title">Easy Train</h1> -->
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <!-- 下拉选择框，选择要进行训练的数据集 -->
                 <div class="steps">
                     <!-- 第一部分 -->
@@ -229,7 +254,9 @@
                         </div>
                     </div>
                 </div>
-                <h3 class="subtitle">当前选择的数据集是：{{dataset}}</h3>
+                <h3 class="subtitle-task" style="top: 15%;">已选择的任务：{{task}}</h3>
+                <h3 class="subtitle-model" style="top: 17%;">已选择的模型：{{model}}</h3>
+                <h3 class="subtitle-dataset" style="top: 19%;">已选择的数据集：{{dataset}}</h3>
                 <div class="container mt-3 position-relative">
                     <form id="dataset-select-form">
                         <label  class="label-select">选择您要使用的数据集：</label>
@@ -237,8 +264,8 @@
                             <select class="form-select form-control" id="dataset-select" name="dataset">
                             </select>
                         </div>
-                        <button type="button" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal" id="dataset-submit-btn">
-                            提交
+                        <button type="button" class="btn btn-light btn-lg"  id="dataset-submit-btn">
+                            下一步
                         </button>
                     </form>
                 </div>
@@ -246,6 +273,14 @@
             <!-- 参数设置和代码生成页面 -->
             <div class="carousel-item" style="background-color: #095a187e;">
                 <!-- <h1 class="title">Easy Train</h1> -->
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <div class="steps">
                     <!-- 第一部分 -->
                     <div class="step">
@@ -324,7 +359,7 @@
                                     </li>
                                 </ul>
                                 <div class="card-footer" style="padding: 0.5rem 1rem; width: 20rem;">
-                                    <input type="submit" value="提交" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal2" id="cfg-submit-btn">
+                                    <input type="submit" value="确认" class="btn btn-light btn-lg" data-toggle="modal" data-target="#myModal2" id="cfg-submit-btn">
                                 </div>
                             </form>
                         </div>
@@ -347,7 +382,9 @@
                 <button type="button" class="btn btn-light btn-lg"  id="code-generate-btn">
                     生成代码
                 </button>
-
+                <button type="button" class="btn btn-light btn-lg"  id="goto-train-btn">
+                    进入训练
+                </button>
                 <button type="button" id="code-copy-btn" data-clipboard-target = ".python" data-toggle="tooltip" data-placement="top" title="copied!" data-trigger="manual" >
                     <img src="{{url_for('static',filename='assets/clipboard-plus.svg')}}" alt="Copy to clipboard" style="width: 25px;height: 25px;">
                 </button>
@@ -356,6 +393,14 @@
             <!-- 模型训练页面 -->
             <div class="carousel-item" style="background-color: #095a187e;">
                 <!-- <h1 class="title">Easy Train</h1> -->
+                <ul class="nav nav-tabs nav-pills justify-content-center">
+                    <li class="nav-item">
+                      <a class="nav-link active" href="/" style="color: white;">MMEdu</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/basenn" style="color: white;">BaseNN</a>
+                    </li>
+                  </ul>
                 <div class="steps">
                     <!-- 第一部分 -->
                     <div class="step">
@@ -441,19 +486,20 @@
 
     <!-- Bootstrap 模态框 -->
     <!-- 提交完成提示 -->
-    <div class="modal" id="myModal">
+    <div class="modal" id="convertModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- 模态框头部 -->
                 <div class="modal-header">
-                    <h4 class="modal-title">设置成功</h4>
+                    <h4 class="modal-title">模型转换</h4>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <p id="modal-message">您的设置已成功保存。</p>
+                    <p id="modal-message" style="word-wrap: break-word;">模型训练已经完成，是否要将模型格式转换为onnx格式？</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary modal-close-btn" data-dismiss="modal" id="btn-modal-close">关闭</button>
+                    <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="convert-btn">是</button>
+                    <button type="button" class="btn btn-secondary modal-close-btn" data-dismiss="modal" id="btn-modal-close">否</button>
                 </div>
             </div>
         </div>
@@ -492,7 +538,7 @@
                     <ul class="list-group">
                         <li class="list-group-item" style="width: 450px;">
                             <label class="card-text" style="font-size: 18px;">分类数量
-                            <img src="{{url_for('static',filename='assets/question-diamond.svg')}}" style="width: 20px;height: 20px;" type="button" data-toggle="popover" title="Popover title" data-content="And here's some amazing content. It's very engaging. Right?" > </label>
+                            <img src="{{url_for('static',filename='assets/question-diamond.svg')}}" style="width: 20px;height: 20px;" type="button" data-toggle="popover" title="分类任务的类别数量，仅用于分类任务！" data-content="And here's some amazing content. It's very engaging. Right?" > </label>
                             <input type="text" class="form-control" id="classNum" placeholder="例如：2">
                         </li>
                         <li class="list-group-item">
@@ -543,12 +589,46 @@
                     <p id="modal-message">训练已经结束，模型权重和日志已存储至……</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="btn-modal-close">好的</button>
+                    <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="finish-train-btn">好的</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+        <div class="modal" id="convertFinishModal">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <!-- 模态框头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">模型转换完成！</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="modal-message"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="btn-modal-close">好的</button>
+                    </div>
                 </div>
             </div>
         </div>
 
-    </div>
+
+                <div class="modal" id="convertLoadingModal">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <!-- 模态框头部 -->
+                            <div class="modal-header">
+                                <h4 class="modal-title">模型转换中……</h4>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                                <p id="modal-message">模型转换中……请稍候</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
           <!-- 训练中止提示-->
           <div class="modal" id="trainTerminateModal">
@@ -569,6 +649,9 @@
             </div>
     
         </div>
+
+        <!-- 选择是否进行模型转换模态框 -->
+        
 
 
     <!-- 引入 Bootstrap JavaScript -->

@@ -6,17 +6,6 @@ import json
 
 
 
-def back2pwd(pwd,level):
-    """
-    返回上`level`数级目录的绝对路径
-    """
-    for i in range(level+1):
-        pwd = os.path.abspath(os.path.dirname(pwd))
-    return pwd
-
-
-
-
 @mmedu_bp.route('/index')
 def index():
     return render_template('mmeduPage.html',
@@ -96,8 +85,15 @@ def set_advance_config():
         set_weight_decay(weight_decay=weight_decay)
     set_optimizer(optimizer=optimizer)
     set_device(device=device)
-    update_pretrained_path(pretrained_model=pretrained_model)
-    print(global_varibles)
+
+    # 如果pretrained_model不是一个路径，而是一个预训练模型的名字，则需要更新pretrained_path
+    # 判断pretrained_model是否是一个路径
+    if pretrained_model.find('\\') == -1:
+        # pretrained_model不是一个路径，而是一个预训练模型的名字，则需要更新pretrained_path
+        update_pretrained_path(pretrained_model=pretrained_model)
+    else:
+        # pretrained_model是一个路径，则直接更新pretrained_path
+        set_pretrained_path(pretrained_path=pretrained_model)
     return jsonify({'message': '设置成功!'})
 
 
@@ -143,3 +139,31 @@ def get_checkpoints_path():
     return jsonify({'checkpoints_path': global_varibles['checkpoints_path']})
 
 
+@mmedu_bp.route('/convert_model',methods=['GET'])
+def convert_model():
+    save_path = global_varibles['checkpoints_path']
+    # 遍历save_path下的所有pth文件，获取best，并转换为onnx
+    # 1. 获取所有pth文件
+    pth_list = []
+    for root, dirs, files in os.walk(save_path):
+        for file in files:
+            if file.endswith('.pth'):
+                pth_list.append(os.path.join(root, file))
+    print(pth_list)
+    # 2. 获取best, 以best_accuracy开头
+    best_pth=""
+    for pth in pth_list:
+        if pth.split('\\')[-1].startswith('best_accuracy'):
+            best_pth = pth
+            break
+    if global_varibles['task']=='classification':
+        from MMEdu import MMClassification as cls
+        cls_model = cls(backbone=global_varibles['model'])
+        cls_model.convert(checkpoint=best_pth, out_file=f'{best_pth.split(".")[0]}.onnx')
+        return jsonify({'message': '转换成功!', 'onnxpath': f'{best_pth.split(".")[0]}.onnx','success':True})
+    elif global_varibles['task']=='detection':
+        from MMEdu import MMDetection as det
+        det_model = det(backbone=global_varibles['model'])
+        det_model.convert(checkpoint=best_pth, out_file=f'{best_pth.split(".")[0]}.onnx')
+        return jsonify({'message': '转换成功!', 'onnxpath': f'{best_pth.split(".")[0]}.onnx','success':True})    
+    return jsonify({'message': '转换失败!', 'onnxpath': '','success':False})
