@@ -189,6 +189,21 @@
 
 }
 
+.basenn-code-field {
+    width: 43%;
+    height: 52%;
+    /* white-space: pre; */
+    top: 20%;
+    position: absolute;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    /* font-size: 16px; */
+    /* font-family: "Courier New", Courier, monospace; */
+    float: left;
+    left: 45%;
+}
+
 .code-field {
     width: 43%;
     height: 52%;

@@ -398,7 +398,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 console.log(result);
                 if (result.success) {
                     // 跳转到下一轮播页面
-                    $('#myModal2').modal('show');
+                    // $('#myModal2').modal('show');
                     $('#myCarousel').carousel('next');
 
                 }
