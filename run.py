@@ -117,6 +117,7 @@ def basenn_train_task():
     basenn_shared_data['IsRunning'] = False
 
 
+from apis.mmedu.config import global_varibles as mmedu_global_varibles
 
 @socketio.on('log')
 def mmedu_poll_log_socket():
@@ -133,6 +134,8 @@ def mmedu_poll_log_socket():
             log_path = os.path.join(log_path, json_files[-1])
             break
     print("log_path",log_path)
+    total_epoch = mmedu_global_varibles['epoch']
+    # print("total_epoch",total_epoch)
     while mmedu_shared_data['IsRunning']:
         if os.path.exists(log_path):
             with open(log_path, 'r') as f:
@@ -142,10 +145,16 @@ def mmedu_poll_log_socket():
                         log = json.loads(line)
                         log = json.dumps(log)
                         socketio.emit('log',log)
-                        print(log)
+                        # print(log)
+                        if last_line_num >1 and "val" in log:
+                            log = json.loads(log)
+                            # print("log",log)
+                            if log['epoch'] == total_epoch:
+                                print("log_task end")
+                                mmedu_shared_data['IsRunning'] = False
+                                break
                     last_line_num = len(lines)
                 time.sleep(1)
-                # todo：如果log中的epoch等于设置的且mode为val，则停止poll log
         else:
             print("log_path not exist")
     print("log_task end")
@@ -162,6 +171,7 @@ def basenn_poll_log_socket(basenn_running_process):
             socketio.emit('log1',line)
         else:
             flag=False
+            print("log_task end")
             break
     return
 
