@@ -17,7 +17,7 @@ global_varibles = {
     "task": "classification",
     "model": "LeNet",
     "dataset": "hand_gray",
-    "dataset_path": back2pwd(__file__,4) + "\\datasets\\cls\\hand_gray",
+    "dataset_path": back2pwd(__file__,4) + "\\datasets\\mmedu_cls\\hand_gray",
     "checkpoints_path": back2pwd(__file__,4) + "\\my_checkpoints", # D:\\workspace\\XEdu\\EasyDL2.0\\checkpoints\\mmedu_20231106_161141
     # "checkpoints_path":"D:\\workspace\\XEdu\\EasyDL2.0\\checkpoints\\mmedu_20231106_161141",
     "lr": 0.01,
@@ -90,13 +90,13 @@ def set_pretrained_path(pretrained_path):
 def get_all_dataset():
     res = {}
     # 获取cls文件夹下的所有文件夹
-    cls_dataset_path = back2pwd(__file__,4)  + "\\datasets\\cls"
+    cls_dataset_path = back2pwd(__file__,4)  + "\\datasets\\mmedu_cls"
     cls_dataset_list = os.listdir(cls_dataset_path)
     # 过滤掉非文件夹
     cls_dataset_list = [x for x in cls_dataset_list if os.path.isdir(cls_dataset_path + "\\" + x)]
     res['cls'] = cls_dataset_list
     # 获取det文件夹下的所有文件夹
-    det_dataset_path = back2pwd(__file__,4)  + "\\datasets\\det"
+    det_dataset_path = back2pwd(__file__,4)  + "\\datasets\\mmedu_det"
     det_dataset_list = os.listdir(det_dataset_path)
     # 过滤掉非文件夹
     det_dataset_list = [x for x in det_dataset_list if os.path.isdir(det_dataset_path + "\\" + x)]  
@@ -147,8 +147,10 @@ def update_pretrained_path(pretrained_model):
 
 
 def update_dataset_path():
-    global_varibles["dataset_path"] = back2pwd(__file__,4)+ "\\datasets\\cls\\" + global_varibles["dataset"]
-
+    if global_varibles['task'] == 'classification':
+        global_varibles["dataset_path"] = back2pwd(__file__,4)+ "\\datasets\\mmedu_cls\\" + global_varibles["dataset"]
+    elif global_varibles['task'] == 'detection':
+        global_varibles["dataset_path"] = back2pwd(__file__,4)+ "\\datasets\\mmedu_det\\" + global_varibles["dataset"]
 
 def generate_mmedu_code():
     full_code=""
