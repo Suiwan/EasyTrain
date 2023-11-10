@@ -35,7 +35,7 @@ global_varibles = {
 
 model_list = {
     "classification":["LeNet","ResNet18","ResNet50","MobileNet"],
-    "detection":["Yolov3","SSD_Lite","Faster-RCNN"],
+    "detection":["Yolov3","SSD_Lite","FasterRCNN"],
 
 }
 
@@ -113,21 +113,27 @@ def get_all_pretrained_model():  # note： 预训练模型统一按照要求放�
     checkpoints_list = os.listdir(checkpoints_path)
     # 过滤掉非文件夹
     checkpoints_list = [x for x in checkpoints_list if os.path.isdir(checkpoints_path + "\\" + x)]
-    print(checkpoints_list)
+    # print(checkpoints_list)
     res = {}
     for x in checkpoints_list:
         # 获取checkpoints文件夹下的所有文件夹
         checkpoints_path = pwd + "\\checkpoints\\" + x
-        checkpoints_list = os.listdir(checkpoints_path)
-        temp = {}
-        for y in checkpoints_list:
-            # 获取checkpoints文件夹下的所有文件夹
-            checkpoints_path = pwd + "\\checkpoints\\" + x + "\\" + y
+        if os.path.isdir(checkpoints_path):
             checkpoints_list = os.listdir(checkpoints_path)
-            # 仅保留.pth文件
-            checkpoints_list = [x for x in checkpoints_list if x.endswith('.pth')]
-            temp[y] = checkpoints_list
-        res[x] = temp
+            temp = {}
+            for y in checkpoints_list:
+                # 获取checkpoints文件夹下的所有文件夹
+                checkpoints_path = pwd + "\\checkpoints\\" + x + "\\" + y
+                if os.path.isdir(checkpoints_path):
+                    checkpoints_list = os.listdir(checkpoints_path)
+                    # 仅保留.pth文件
+                    checkpoints_list = [x for x in checkpoints_list if x.endswith('.pth')]
+                    temp[y] = checkpoints_list
+                else:
+                    continue
+            res[x] = temp
+        else:
+            continue
     print(res)
     return res
 

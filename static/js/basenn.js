@@ -169,8 +169,8 @@ document.addEventListener("DOMContentLoaded", function () {
         activationDropdown.className = "activation-dropdown";
         activationDropdown.innerHTML = `<span class="layer-name">激活函数:</span>
             <select>
+            <option value="None">None</option>
                 <option value="relu">ReLU</option>
-
                 <option value="softmax">Softmax</option>
             </select>
         `;
@@ -472,6 +472,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     // 跳转到下一轮播页面
                     // $('#myCarousel').carousel('next');
+                    $('#cfgModal').modal('hide');
                 }
                 else {
                     alert("参数设置失败，请检查参数是否正确！");
@@ -691,7 +692,9 @@ function nextCarouselItem() {
         lossChart.setOption(lossOption);
         accChart.setOption(accOption);
         flag = 0;
-        const data_reg = /\{epoch:(.*)  Loss:(.*)  Accuracy:(.*)\}/;
+        const data_reg_acc = /\{epoch:(.*)  Loss:(.*)  Accuracy:(.*)\}/;
+        const data_reg_mae = /\{epoch:(.*)  Loss:(.*)  MAE:(.*)\}/;
+        const data_reg_mse = /\{epoch:(.*)  Loss:(.*)  MSE:(.*)\}/;
         const checkpoints_reg = /保存模型(.*)成功！/;
         socket.on('log1', (data) => {
             if (flag == 0) {
@@ -706,43 +709,135 @@ function nextCarouselItem() {
             if (data.includes("{")) {
                 // console.log(num, data);
                 // 使用正则表达式提取epoch,loss,Accuracy
-                var result = data_reg.exec(data);
-                epoch = parseInt(result[1]); // 记得转换！！，否则计算时会有问题
-                loss = parseFloat(result[2]);
-                acc = parseFloat(result[3]);
-                if (epoch == currentEpoch) {
-                    temp_loss.push(loss);
-                    temp_acc.push(acc);
-                }
-                else if (epoch != currentEpoch) {
-                    console.log("draw chart")
-
-                    var loss_sum = 0;
-                    var acc_sum = 0;
-                    // 求temp_loss temp_acc 的平均值
-                    for (var i = 0; i < temp_loss.length; i++) {
-                        loss_sum += parseFloat(temp_loss[i]);
-                        acc_sum += parseFloat(temp_acc[i]);
+                if (data.includes("Accuracy")) {
+                    var result = data_reg_acc.exec(data);
+                    epoch = parseInt(result[1]); // 记得转换！！，否则计算时会有问题
+                    loss = parseFloat(result[2]);
+                    acc = parseFloat(result[3]);
+                    if (epoch == currentEpoch) {
+                        temp_loss.push(loss);
+                        temp_acc.push(acc);
                     }
-                    var avgLoss = loss_sum / temp_loss.length;
-                    var avgAcc = acc_sum / temp_acc.length;
-                    // 设置进度条
-                    setTrainProgressBar(epoch);
-                    // 更新图表
-                    lossOption.series[0].data.push(avgLoss);
-                    lossChart.setOption(lossOption);
-                    accOption.series[0].data.push(avgAcc);
-                    accChart.setOption(accOption);
-                    // 清空temp_loss temp_acc
-                    temp_loss = [];
-                    temp_acc = [];
-                    lossList.push(avgLoss);
-                    accList.push(avgAcc);
-                    currentEpoch += 1
-                    temp_loss.push(loss);
-                    temp_acc.push(acc);
-                    console.log(epoch, currentEpoch)
+                    else if (epoch != currentEpoch) {
+                        console.log("draw chart")
+    
+                        var loss_sum = 0;
+                        var acc_sum = 0;
+                        // 求temp_loss temp_acc 的平均值
+                        for (var i = 0; i < temp_loss.length; i++) {
+                            loss_sum += parseFloat(temp_loss[i]);
+                            acc_sum += parseFloat(temp_acc[i]);
+                        }
+                        var avgLoss = loss_sum / temp_loss.length;
+                        var avgAcc = acc_sum / temp_acc.length;
+                        // 设置进度条
+                        setTrainProgressBar(epoch);
+                        // 更新图表
+                        lossOption.series[0].data.push(avgLoss);
+                        lossChart.setOption(lossOption);
+                        accOption.series[0].data.push(avgAcc);
+                        accChart.setOption(accOption);
+                        // 清空temp_loss temp_acc
+                        temp_loss = [];
+                        temp_acc = [];
+                        lossList.push(avgLoss);
+                        accList.push(avgAcc);
+                        currentEpoch += 1
+                        temp_loss.push(loss);
+                        temp_acc.push(acc);
+                        console.log(epoch, currentEpoch)
+                    }
                 }
+
+                else if (data.includes("MAE")){
+                    var result = data_reg_mae.exec(data);
+                    epoch = parseInt(result[1]); // 记得转换！！，否则计算时会有问题
+                    loss = parseFloat(result[2]);
+                    acc = parseFloat(result[3]);
+
+                    // 修改AccChart为MAEChart
+                    accOption.title.text = "MAE Chart";
+                    accOption.yAxis.name = "MAE";
+                    accChart.setOption(accOption);
+
+                    if (epoch == currentEpoch) {
+                        temp_loss.push(loss);
+                        temp_acc.push(acc);
+                    }
+                    else if (epoch != currentEpoch) {
+                        console.log("draw chart")
+    
+                        var loss_sum = 0;
+                        var acc_sum = 0;
+                        // 求temp_loss temp_acc 的平均值
+                        for (var i = 0; i < temp_loss.length; i++) {
+                            loss_sum += parseFloat(temp_loss[i]);
+                            acc_sum += parseFloat(temp_acc[i]);
+                        }
+                        var avgLoss = loss_sum / temp_loss.length;
+                        var avgAcc = acc_sum / temp_acc.length;
+                        // 设置进度条
+                        setTrainProgressBar(epoch);
+                        // 更新图表
+                        lossOption.series[0].data.push(avgLoss);
+                        lossChart.setOption(lossOption);
+                        accOption.series[0].data.push(avgAcc);
+                        accChart.setOption(accOption);
+                        // 清空temp_loss temp_acc
+                        temp_loss = [];
+                        temp_acc = [];
+                        lossList.push(avgLoss);
+                        accList.push(avgAcc);
+                        currentEpoch += 1
+                        temp_loss.push(loss);
+                        temp_acc.push(acc);
+                        console.log(epoch, currentEpoch)
+                    }
+                }
+                else if(data.includes("MSE")){
+                    var result = data_reg_mse.exec(data);
+                    epoch = parseInt(result[1]); // 记得转换！！，否则计算时会有问题
+                    loss = parseFloat(result[2]);
+                    acc = parseFloat(result[3]);
+                    // 修改AccChart为MSEChart
+                    accOption.title.text = "MSE Chart";
+                    accOption.yAxis.name = "MSE";
+                    accChart.setOption(accOption);
+                    if (epoch == currentEpoch) {
+                        temp_loss.push(loss);
+                        temp_acc.push(acc);
+                    }
+                    else if (epoch != currentEpoch) {
+                        console.log("draw chart")
+    
+                        var loss_sum = 0;
+                        var acc_sum = 0;
+                        // 求temp_loss temp_acc 的平均值
+                        for (var i = 0; i < temp_loss.length; i++) {
+                            loss_sum += parseFloat(temp_loss[i]);
+                            acc_sum += parseFloat(temp_acc[i]);
+                        }
+                        var avgLoss = loss_sum / temp_loss.length;
+                        var avgAcc = acc_sum / temp_acc.length;
+                        // 设置进度条
+                        setTrainProgressBar(epoch);
+                        // 更新图表
+                        lossOption.series[0].data.push(avgLoss);
+                        lossChart.setOption(lossOption);
+                        accOption.series[0].data.push(avgAcc);
+                        accChart.setOption(accOption);
+                        // 清空temp_loss temp_acc
+                        temp_loss = [];
+                        temp_acc = [];
+                        lossList.push(avgLoss);
+                        accList.push(avgAcc);
+                        currentEpoch += 1
+                        temp_loss.push(loss);
+                        temp_acc.push(acc);
+                        console.log(epoch, currentEpoch)
+                    }
+                }
+          
             }
 
             // 当data出现类似保存模型D:\workspace\XEdu\EasyDL2.0\checkpoints\basenn_20231103_162909\basenn.pth成功！时
@@ -923,6 +1018,12 @@ function nextCarouselItem() {
     });
 
     document.getElementById('finish-train-btn').addEventListener('click', function () {
+        // 弹出convertModal
+        $('#trainFinishModal').modal('hide');
+        $('#convertModal').modal('show');
+    });
+
+    document.getElementById('finish-train-btn2').addEventListener('click', function () {
         // 弹出convertModal
         $('#trainFinishModal').modal('hide');
         $('#convertModal').modal('show');

@@ -5,7 +5,7 @@ var isGenerated = false;
 // 任务类型和模型列表,需要实时更新
 var modelList = {
     "classification": ["LeNet", "ResNet18", "ResNet50", "MobileNet"],
-    "detection": ["Yolov3", "SSD_Lite", "Faster-RCNN"],
+    "detection": ["Yolov3", "SSD_Lite", "FasterRCNN"],
 }
 
 var lossChart = echarts.init(document.getElementById('loss-chart'));
@@ -394,6 +394,8 @@ document.getElementById("advset-submit-btn").addEventListener("click", function 
         .then(data => {
             // 处理成功响应
             console.log(data);
+            // 关闭模态框
+            $('#cfgModal').modal('hide');
             // 在这里可以执行其他操作，例如更新页面内容
         })
         .catch(error => {
@@ -476,6 +478,13 @@ document.getElementById('stop-train-btn').addEventListener('click', function () 
 });
 
 document.getElementById('finish-train-btn').addEventListener('click', function () {
+    // 弹出convertModal
+    $('#trainFinishModal').modal('hide');
+    $('#convertModal').modal('show');
+});
+
+
+document.getElementById('finish-train-btn2').addEventListener('click', function () {
     // 弹出convertModal
     $('#trainFinishModal').modal('hide');
     $('#convertModal').modal('show');

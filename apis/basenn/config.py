@@ -11,42 +11,64 @@ def back2pwd(pwd,level):
     return pwd
 
 
-# global_varibles = {
-#     "dataset":"iris_training.csv",
-#     "dataset_path": back2pwd(__file__,3) + "\\dataset\\basenn\\iris_training.csv",
-#     "checkpoints_path": back2pwd(__file__,3) + "\\checkpoints", # save fold path
-#     "lr": 0.01,
-#     "epochs": 10,
-#     "network": [{'id': 1, 'type': 'linear', 'activation': 'relu', 'size': (4, 10)}, 
-#                 {'id': 2, 'type': 'linear', 'activation': 'relu', 'size': (10, 20)},
-#                   {'id': 3, 'type': 'linear', 'activation': 'softmax', 'size': (20, 3)}], # 网络结构，e.g.{"id":1, "name":'linear;,"size":(784,10),"activation":'relu'}
-#     "pretrained_path": None,
-#     "metrics": ["acc"], # options: acc mae mse
-#     "loss":"CrossEntropyLoss", # options: CrossEntropyLoss MSELoss L1Loss……
-#     "random_seed": 42,
-#     "batch_size": 32,
-#     "optimizer":"SGD"
-
-# }
-
-
 global_varibles = {
-    "dataset":"iris\\iris_training.csv",
-    "dataset_path": back2pwd(__file__,4) + "\\datasets\\basenn\\workflow\\workflow_pose_train.csv",
-    "checkpoints_path": back2pwd(__file__,4) + "\\my_checkpoints", # save fold path
+    "dataset":"iris_training.csv",
+    "dataset_path": back2pwd(__file__,3) + "\\dataset\\basenn\\iris_training.csv",
+    "checkpoints_path": back2pwd(__file__,3) + "\\checkpoints", # save fold path
     "lr": 0.01,
     "epochs": 10,
-    "network": [{'id': 1, 'type': 'linear', 'activation': 'relu', 'size': (52, 120)}, 
-                {'id': 2, 'type': 'linear', 'activation': 'relu', 'size': (120, 84)},
-                  {'id': 3, 'type': 'linear', 'activation': 'softmax', 'size': (84, 8)}], # 网络结构，e.g.{"id":1, "name":'linear;,"size":(784,10),"activation":'relu'}
+    "network": [{'id': 1, 'type': 'linear', 'activation': 'relu', 'size': (4, 10)}, 
+                {'id': 2, 'type': 'linear', 'activation': 'relu', 'size': (10, 20)},
+                  {'id': 3, 'type': 'linear', 'activation': 'softmax', 'size': (20, 3)}], # 网络结构，e.g.{"id":1, "name":'linear;,"size":(784,10),"activation":'relu'}
     "pretrained_path": None,
     "metrics": ["acc"], # options: acc mae mse
     "loss":"CrossEntropyLoss", # options: CrossEntropyLoss MSELoss L1Loss……
     "random_seed": 42,
-    "batch_size": 128,
-    "optimizer":"Adam"
+    "batch_size": 32,
+    "optimizer":"SGD"
 
 }
+
+
+# global_varibles = {
+#     "dataset":"iris\\iris_training.csv",
+#     "dataset_path": back2pwd(__file__,4) + "\\datasets\\basenn\\iris\\iris_training.csv",
+#     "checkpoints_path": back2pwd(__file__,4) + "\\my_checkpoints", # save fold path
+#     "lr": 0.01,
+#     "epochs": 10,
+#     "network": [{'id': 1, 'type': 'linear', 'activation': 'relu', 'size': (4, 120)}, 
+#                 {'id': 2, 'type': 'linear', 'activation': 'relu', 'size': (120, 84)},
+#                   {'id': 3, 'type': 'linear', 'activation': 'softmax', 'size': (84, 3)}], # 网络结构，e.g.{"id":1, "name":'linear;,"size":(784,10),"activation":'relu'}
+#     "pretrained_path": None,
+#     "metrics": "acc", # options: acc mae mse
+#     "loss":"CrossEntropyLoss", # options: CrossEntropyLoss MSELoss L1Loss……
+#     "random_seed": 42,
+#     "batch_size": 128,
+#     "optimizer":"Adam"
+# }
+
+# global_varibles = {
+#     "dataset":"test\\train.csv",
+#     "dataset_path": back2pwd(__file__,4) + "\\datasets\\basenn\\test\\normed_train.csv",
+#     "checkpoints_path": back2pwd(__file__,4) + "\\my_checkpoints", # save fold path
+#     "lr": 0.01,
+#     "epochs": 10,
+#     "network": [{'id': 1, 'type': 'linear', 'activation': 'relu', 'size': (3, 60)}, 
+#                 {'id': 2, 'type': 'linear', 'activation': 'relu', 'size': (60, 60)},
+#                   {'id': 3, 'type': 'linear', 'activation': 'relu', 'size': (60, 6)},
+#                   {'id': 4, 'type': 'linear', 'activation': 'None','size': (6, 1)},
+#                   ],
+#     "pretrained_path": None,
+#     "metrics": "mse", # options: acc mae mse
+#     "loss":"MSELoss", # options: CrossEntropyLoss MSELoss L1Loss……
+#     "random_seed": 42,
+#     "batch_size": 32,
+#     "optimizer":"Adam"
+# }
+
+
+
+
 def get_all_pth(pwd):
     pth_list = []
     for file in os.listdir(pwd):
@@ -132,9 +154,20 @@ def update_dataset_path():
 
 
 def _add_code(type,size,activation,**kwarg):
-    return f"model.add(layer='{type}',size={size},activation='{activation}')"
+    if activation!="None":
+        return f"model.add(layer='{type}',size={size},activation='{activation}')"
+    else:
+        return f"model.add(layer='{type}',size={size})"
+    
 def _add_optimizer(optimizer):
     return f"model.add(optimizer='{optimizer}')"
+
+
+def check_if_regression():
+    if global_varibles["metrics"] == "mse" or global_varibles["metrics"] == "mae":
+        return True
+    else:
+        return False
 
 def generate_basenn_code():
     full_code = ""
@@ -142,8 +175,11 @@ def generate_basenn_code():
     import_part = "# coding:utf-8"+"\n"+"from BaseNN import nn" + "\n"
     def_part = "def generated_train():"+"\n"
     model_part = "\t"+"model = nn()" + "\n"
-    # 如果dataset不是文件夹，那么设置dataset路径
-    dataset_part = "\t"+f"model.load_tab_data(r'{global_varibles['dataset_path']}',batch_size={global_varibles['batch_size']})"+ "\n"
+    dataset_part = ""
+    if check_if_regression():
+        dataset_part = "\t"+f"model.load_tab_data(r'{global_varibles['dataset_path']}',y_type='float',batch_size={global_varibles['batch_size']})"+ "\n"
+    else:
+        dataset_part = "\t"+f"model.load_tab_data(r'{global_varibles['dataset_path']}',y_type='long',batch_size={global_varibles['batch_size']})"+ "\n"
     # save_fold
     save_part = "\t"+f"model.save_fold = r'{global_varibles['checkpoints_path']}'"+ "\n"
     # random_seed
@@ -155,9 +191,9 @@ def generate_basenn_code():
         construct_part += "\t"+_add_code(n["type"],n["size"],n["activation"]) + "\n"
     optimizer_part = "\t"+_add_optimizer(global_varibles["optimizer"]) + "\n"
     if global_varibles['pretrained_path'] is None:
-        train_part = "\t"+f"model.train(epochs={global_varibles['epochs']},lr={global_varibles['lr']},loss='{global_varibles['loss']}',metrics={global_varibles['metrics']})" + "\n"
+        train_part = "\t"+f"model.train(epochs={global_varibles['epochs']},lr={global_varibles['lr']},loss='{global_varibles['loss']}',metrics=['{global_varibles['metrics']}'])" + "\n"
     else:
-        train_part = "\t"+f"model.train(epochs={global_varibles['epochs']},lr={global_varibles['lr']},loss='{global_varibles['loss']}',metrics={global_varibles['metrics']},checkpoint='{global_varibles['pretrained_path']}')" + "\n"
+        train_part = "\t"+f"model.train(epochs={global_varibles['epochs']},lr={global_varibles['lr']},loss='{global_varibles['loss']}',metrics=['{global_varibles['metrics']}'],checkpoint='{global_varibles['pretrained_path']}')" + "\n"
     entry_part = "\n"+"if __name__ == '__main__':"+"\n"+"\t"+"generated_train()"+"\n"
     full_code = import_part + "\n" + def_part +model_part + dataset_part + save_part + seed_part + optimizer_part  + construct_part + train_part + entry_part
     with current_app.app_context():
