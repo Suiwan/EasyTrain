@@ -13,15 +13,15 @@ def back2pwd(pwd,level):
 
 global_varibles = {
     "dataset":"iris_training.csv",
-    "dataset_path": back2pwd(__file__,3) + "\\dataset\\basenn\\iris_training.csv",
-    "checkpoints_path": back2pwd(__file__,3) + "\\checkpoints", # save fold path
+    "dataset_path": back2pwd(__file__,4) + "\\datasets\\basenn\\iris\\iris_training.csv",
+    "checkpoints_path": back2pwd(__file__,4) + "\\my_checkpoints", # save fold path
     "lr": 0.01,
     "epochs": 10,
     "network": [{'id': 1, 'type': 'linear', 'activation': 'relu', 'size': (4, 10)}, 
                 {'id': 2, 'type': 'linear', 'activation': 'relu', 'size': (10, 20)},
                   {'id': 3, 'type': 'linear', 'activation': 'softmax', 'size': (20, 3)}], # 网络结构，e.g.{"id":1, "name":'linear;,"size":(784,10),"activation":'relu'}
     "pretrained_path": None,
-    "metrics": ["acc"], # options: acc mae mse
+    "metrics": "acc",# options: acc mae mse
     "loss":"CrossEntropyLoss", # options: CrossEntropyLoss MSELoss L1Loss……
     "random_seed": 42,
     "batch_size": 32,
