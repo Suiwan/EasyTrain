@@ -758,6 +758,8 @@ function nextCarouselItem() {
                     // 修改AccChart为MAEChart
                     accOption.title.text = "MAE Chart";
                     accOption.yAxis.name = "MAE";
+                    accOption.series[0].name = "MAE";
+                    accOption.legend.data = ["MAE"];
                     accChart.setOption(accOption);
 
                     if (epoch == currentEpoch) {
@@ -802,6 +804,8 @@ function nextCarouselItem() {
                     // 修改AccChart为MSEChart
                     accOption.title.text = "MSE Chart";
                     accOption.yAxis.name = "MSE";
+                    accOption.series[0].name = "MSE";
+                    accOption.legend.data = ["MSE"];
                     accChart.setOption(accOption);
                     if (epoch == currentEpoch) {
                         temp_loss.push(loss);
