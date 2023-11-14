@@ -712,13 +712,6 @@ function poll_log() {
                 document.getElementById('start-train-btn').disabled = false;
 
 
-                // 自动发送请求进行模型转换
-                fetch('/mmedu/convert_model', {
-                    method: 'GET',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                })
 
             }
 
