@@ -49,6 +49,17 @@ def select_dataset():
         update_dataset_path()
         print("dataset_path now ",global_varibles["dataset_path"])
         response_data = {'message': '设置成功!', 'selected_option': dataset}
+        
+        task = global_varibles['task']
+        if task=="classification":
+            # 检查在checkpoints/mmcls_model/下是否存在该dataset同名文件夹,如果不存在，则创建该文件夹
+            path = back2pwd(__file__,4) + "\\checkpoints\\mmedu_cls_model\\"
+            if not os.path.exists(path+dataset):
+                os.makedirs(path+dataset)
+        elif task=="detection":
+            path = back2pwd(__file__,4) + "\\checkpoints\\mmedu_det_model\\"
+            if not os.path.exists(path+dataset):
+                os.makedirs(path+dataset)
         return jsonify(response_data)
 
 

@@ -23,6 +23,11 @@ def select_dataset():
     update_dataset_path()
     print("dataset now ",global_varibles["dataset"])
     print("dataset_path now ",global_varibles["dataset_path"])
+    # 只取dataset前面的父文件夹名字
+    name = dataset.split("\\")[0]
+    path = back2pwd(__file__,4) + "\\checkpoints\\basenn_model\\"
+    if not os.path.exists(path+name):
+            os.makedirs(path+name)
     return jsonify({'message': '设置成功!', 'success': True})
 
 
