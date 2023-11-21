@@ -8,6 +8,7 @@ import subprocess
 from apis.mmedu.config import set_mmedu_checkpoints_path,generate_mmedu_code
 from extensions import app,socketio
 from apis.basenn.config import set_basenn_checkpoints_path,generate_basenn_code,back2pwd,global_varibles
+from apis.mmedu.config import global_varibles as mmedu_global_varibles
 
 
 
@@ -58,9 +59,10 @@ def mmedu_train_task(child_conn):
     print(mmedu_running_process.pid)
     child_conn.send(mmedu_running_process.pid)
     out,error = mmedu_running_process.communicate() # 尝试打印运行时的报错
+    if error:
     # 将error编码为utf-8
-    error = error.decode('utf-8')
-    print("error",error)
+        error = error.decode('utf-8')
+        print("error",error)
     print("subprocess end")
     mmedu_shared_data['IsRunning'] = False
 
@@ -79,7 +81,6 @@ def basenn_train_task():
     basenn_shared_data['IsRunning'] = False
 
 
-from apis.mmedu.config import global_varibles as mmedu_global_varibles
 
 @socketio.on('log')
 def mmedu_poll_log_socket():
@@ -129,6 +130,10 @@ def basenn_poll_log_socket(basenn_running_process):
     flag=True
     while flag:
         line = basenn_running_process.stdout.readline()
+        error = basenn_running_process.stderr.read()
+        if error:
+            print("error",error)
+            return jsonify({'message': error})
         if line:
             socketio.emit('log1',line)
         else:
