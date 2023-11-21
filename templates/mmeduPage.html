@@ -93,7 +93,12 @@
                         </div>
                     </div>
                 </div>
-                <h3 class="subtitle">已选择的任务：{{task}}</h3>
+                <!-- todo: classification -->
+                {% if task == 'classification' %}
+                <h3 class="subtitle">已选择的任务：分类任务</h3>
+                {% elif task == 'detection' %}
+                <h3 class="subtitle">已选择的任务：检测任务</h3>
+                {% endif %}
                 <div class="container mt-3 position-relative">
                     <form id="task-select-form">
                         <label  class="label-select">选择您要训练的任务：</label>
