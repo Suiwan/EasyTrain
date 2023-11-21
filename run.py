@@ -22,47 +22,6 @@ def basenn():
     return render_template('basennPage.html',dataset=global_varibles['dataset'])
 
 
-# 离线轮询
-# def poll_log():
-#     global shared_data
-#     time_stamp = shared_data.get('time_stamp', '')
-#     last_line_num = 0
-#     print("log_task"+time_stamp)
-#     isRunning = shared_data.get('IsRunning', False)
-#     log_path = os.path.abspath(os.path.dirname(os.path.dirname(__file__))) + "\\checkpoints\\" + f"{time_stamp}"
-#     json_path = ""
-#     while True:
-#         json_files = [x for x in os.listdir(log_path) if x.endswith('.json')]
-#         if len(json_files) != shared_data['train_times']: # 防止多次训练时，没读取到最新的日志文件
-#             time.sleep(1)
-#         else:
-#             json_path = os.path.join(log_path, json_files[-1])
-#             break
-#     print("log_path",json_path)
-#     while isRunning:
-#         if os.path.exists(json_path):
-#             with open(json_path, 'r') as f:
-#                 lines = f.readlines()
-#                 if len(lines) > last_line_num:
-#                     for line in lines[last_line_num:]:
-#                         log = json.loads(line)
-#                         # to str
-#                         log = json.dumps(log)
-#                         shared_data['message'] = log
-#                         print(log)
-#                     last_line_num = len(lines)
-#             time.sleep(1)
-#     print("log_task end")
-
-
-# 离线轮询
-# @app.route('/get_message',methods=['GET'])
-# def get_message():
-
-#     global shared_data
-#     log_data = shared_data['message']
-#     return jsonify(log_data)
-
 
 mmedu_shared_data = {
     'message':None,
@@ -98,7 +57,10 @@ def mmedu_train_task(child_conn):
     mmedu_running_process = subprocess.Popen(["..\..\env\python.exe","mmedu_code.py"],stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     print(mmedu_running_process.pid)
     child_conn.send(mmedu_running_process.pid)
-    mmedu_running_process.communicate()
+    out,error = mmedu_running_process.communicate() # 尝试打印运行时的报错
+    # 将error编码为utf-8
+    error = error.decode('utf-8')
+    print("error",error)
     print("subprocess end")
     mmedu_shared_data['IsRunning'] = False
 

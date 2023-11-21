@@ -8,8 +8,7 @@ var modelList = {
     "detection": ["Yolov3", "SSD_Lite", "FasterRCNN"],
 }
 
-var lossChart = echarts.init(document.getElementById('loss-chart'));
-var accChart = echarts.init(document.getElementById('acc-chart'));
+
 
 // 图表配置
 var lossOption = {
@@ -59,9 +58,26 @@ var accOption = {
     }]
 };
 
-
+var lossChart = echarts.init(document.getElementById('loss-chart'));
+var accChart = echarts.init(document.getElementById('acc-chart'));
 
 document.addEventListener('DOMContentLoaded', function () {
+
+
+    // window.onresize = function () {
+    //     window_height = document.documentElement.clientHeight;
+    //     window_width = document.documentElement.clientWidth;
+    //     console.log("height", window_height);
+    //     console.log("width", window_width);
+
+    //     // 根据屏幕大小调整accChart和lossChart的大小
+    //     if (window_width > 1212) {
+    //         // 调大accChart和lossChart的宽度
+    //         accChart.resize({ width: 550 });
+    //         lossChart.resize({ width: 550 });
+    //     }
+    // }
+
 
     // 选择任务类型
     document.getElementById('task-submit-btn').addEventListener('click', function () {
@@ -414,7 +430,7 @@ function nextCarouselItem() {
 }
 
 // 绑定到关闭按钮
-document.getElementById('btn-modal-close').addEventListener('click', nextCarouselItem);
+// document.getElementById('btn-modal-close').addEventListener('click', nextCarouselItem);
 // document.getElementById('dataset-submit-btn').addEventListener('click', nextCarouselItem);
 // document.getElementById('model-submit-btn').addEventListener('click', nextCarouselItem);
 
@@ -466,12 +482,12 @@ document.getElementById('stop-train-btn').addEventListener('click', function () 
                 $('#trainTerminateModal').modal('show');
             }
             else {
-                trainTerminateModal = document.getElementById('trainTerminateModal');
-                body = trainTerminateModal.getElementsByClassName("modal-body")[0];
-                p = body.getElementsByTagName("p")[0];
-                p.innerHTML = data.message;
-                // 设置自动换行
-                p.style.wordWrap = "break-word";
+                // trainTerminateModal = document.getElementById('trainTerminateModal');
+                // body = trainTerminateModal.getElementsByClassName("modal-body")[0];
+                // p = body.getElementsByTagName("p")[0];
+                // p.innerHTML = data.message;
+                // // 设置自动换行
+                // p.style.wordWrap = "break-word";
                 $('#trainTerminateModal').modal('show');
             }
         });
@@ -710,8 +726,6 @@ function poll_log() {
                 accChart.setOption(accOption);
                 // 训练按钮被启用
                 document.getElementById('start-train-btn').disabled = false;
-
-
 
             }
 

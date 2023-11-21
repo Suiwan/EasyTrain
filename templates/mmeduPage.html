@@ -453,7 +453,7 @@
                     </div>
                 </div>
                 <!-- 分割线 -->
-                <div class="vertical-divider-train"></div>
+                <!-- <div class="vertical-divider-train"></div> -->
                 
                 <div id="loss-chart"></div>
                 <div id="acc-chart"></div>
@@ -486,7 +486,7 @@
 
     <!-- Bootstrap 模态框 -->
     <!-- 提交完成提示 -->
-    <div class="modal" id="convertModal">
+    <div class="modal fade" data-backdrop="static" data-keyboard="false" id="convertModal">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- 模态框头部 -->
@@ -499,13 +499,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-success modal-close-btn" data-dismiss="modal" id="convert-btn">是</button>
-                    <button type="button" class="btn btn-secondary modal-close-btn" data-dismiss="modal" id="btn-modal-close">否</button>
+                    <button type="button" class="btn btn-secondary modal-close-btn" data-dismiss="modal" id="btn-modal-close2">否</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <div class="modal" id="myModal2">
+    <div class="modal fade " id="myModal2">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- 模态框头部 -->
@@ -524,7 +524,7 @@
     </div>
 
 <!-- 更多参数设置——todo：epoch间隔等 -->
-    <div class="modal" id="cfgModal" aria-labelledby="cfgModalLabel" aria-hidden="true" tabindex="-1">
+    <div class="modal fade" id="cfgModal"  data-backdrop="static" data-keyboard="false" aria-labelledby="cfgModalLabel" aria-hidden="true" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
               <div class="modal-header">
@@ -577,7 +577,7 @@
     </div>
 
     <!-- 训练完成提示-->
-    <div class="modal" id="trainFinishModal">
+    <div class="modal fade" id="trainFinishModal" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <!-- 模态框头部 -->
@@ -596,7 +596,7 @@
     </div>
 
 
-        <div class="modal" id="convertFinishModal">
+        <div class="modal fade" id="convertFinishModal">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <!-- 模态框头部 -->
@@ -615,7 +615,7 @@
         </div>
 
 
-                <div class="modal" id="convertLoadingModal">
+                <div class="modal fade" id="convertLoadingModal" data-backdrop="static" data-keyboard="false">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <!-- 模态框头部 -->
@@ -643,7 +643,7 @@
                         <p id="modal-message">训练已终止，请重新训练</p>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-light modal-close-btn" data-dismiss="modal" id="btn-modal-close">好的</button>
+                        <button type="button" class="btn btn-light modal-close-btn" data-dismiss="modal" id="btn-modal-close2">好的</button>
                     </div>
                 </div>
             </div>

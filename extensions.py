@@ -7,6 +7,7 @@ import os
 from apis.mmedu import mmedu_bp
 from apis.basenn import basenn_bp
 app = Flask(__name__,static_url_path='/static')
+app.config['JSON_AS_ASCII'] = False
 
 CORS(app)
 
