@@ -4,30 +4,23 @@ from .config import *
 import json
 
 
-@basenn_bp.route('/test')
-def test():
-    return jsonify({'message': 'test success!'})
-
-
-@basenn_bp.route('/dataset',methods=['GET'])
-def dataset():
-    return render_template('dataset.html')
-
-
 @basenn_bp.route('/select_dataset',methods=['POST'])
 def select_dataset():
     data = json.loads(request.data)
     dataset = data.get("dataset")
-    print("dataset",dataset)
+    # 取dataset最后一个文件夹名字以及父文件夹名字
+    dir_name = dataset.split("\\")[len(dataset.split("\\"))-2]
+    file_name = dataset.split("\\")[-1]
+    dataset = os.path.join(dir_name,file_name)
     set_dataset(dataset=dataset)
     update_dataset_path()
     print("dataset now ",global_varibles["dataset"])
     print("dataset_path now ",global_varibles["dataset_path"])
     # 只取dataset前面的父文件夹名字
-    name = dataset.split("\\")[0]
+    # name = dataset.split("\\")[0]
     path = back2pwd(__file__,4) + "\\checkpoints\\basenn_model\\"
-    if not os.path.exists(path+name):
-            os.makedirs(path+name)
+    if not os.path.exists(path+dir_name):
+            os.makedirs(path+dir_name)
     return jsonify({'message': '设置成功!', 'success': True})
 
 

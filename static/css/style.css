@@ -124,7 +124,7 @@
     transform: translate(-50%, -50%);
     /* 通过平移来实现居中 */
     /* 更大一点 */
-    width: 500px;
+    width: 600px;
     height: 300px;
     padding: 20px;
 }

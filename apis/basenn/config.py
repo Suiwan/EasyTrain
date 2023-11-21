@@ -145,7 +145,7 @@ def get_all_dataset():
         for file in os.listdir(os.path.join(pwd,dir)):
             # print(os.path.join(pwd,dir,file))
             if os.path.isfile(os.path.join(pwd,dir,file)):
-                dataset_list.append(os.path.join(dir,file))
+                dataset_list.append(os.path.join(pwd,dir,file))
     return dataset_list
 
 def update_dataset_path():

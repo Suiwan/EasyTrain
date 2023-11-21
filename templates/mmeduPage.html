@@ -93,7 +93,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- todo: classification -->
                 {% if task == 'classification' %}
                 <h3 class="subtitle">已选择的任务：分类任务</h3>
                 {% elif task == 'detection' %}
@@ -177,11 +176,19 @@
                         </div>
                     </div>
                 </div>
-                <h3 class="subtitle-task" style="top: 15%;">已选择的任务：{{task}}</h3>
+                <!-- <h3 class="subtitle-task" style="top: 15%;">已选择的任务：{{task}}</h3> -->
+                {% if task == 'classification' %}
+                <h3 class="subtitle-task" style="top: 15%;">已选择的任务：分类任务</h3>
+                {% elif task == 'detection' %}
+                <h3 class="subtitle-task" style="top: 15%;">已选择的任务：检测任务</h3>
+                {% endif %}
                 <h3 class="subtitle-model" style="top: 18%;">已选择的模型：{{model}}</h3>
                 <div class="container mt-3 position-relative">
                     <form id="model-select-form">
-                        <label  class="label-select">选择您要使用的模型：</label>
+                        <div><label  class="label-select">选择您要使用的模型：</label>
+                        <!-- 一个按钮，跳转至链接：https://xedu.readthedocs.io/zh/master/mmedu/introduction.html#mmedusota -->
+                        <a href="https://xedu.readthedocs.io/zh/master/mmedu/introduction.html#mmedusota" target="_blank" class="btn btn-light" style="margin-left: 10px; margin-bottom: 10px; font-size: smaller;">了解更多</a>
+                        </div>
                         <div class="mb-3">
                             <select class="form-select form-control" id="model-select" name="model">
                                 <option value="LeNet">LeNet</option>
@@ -259,7 +266,11 @@
                         </div>
                     </div>
                 </div>
-                <h3 class="subtitle-task" style="top: 15%;">已选择的任务：{{task}}</h3>
+                {% if task == 'classification' %}
+                <h3 class="subtitle-task" style="top: 15%;">已选择的任务：分类任务</h3>
+                {% elif task == 'detection' %}
+                <h3 class="subtitle-task" style="top: 15%;">已选择的任务：检测任务</h3>
+                {% endif %}
                 <h3 class="subtitle-model" style="top: 17%;">已选择的模型：{{model}}</h3>
                 <h3 class="subtitle-dataset" style="top: 19%;">已选择的数据集：{{dataset}}</h3>
                 <div class="container mt-3 position-relative">

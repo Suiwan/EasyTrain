@@ -32,7 +32,10 @@ var lossOption = {
         type: 'line',
         smooth: true,
         data: []
-    }]
+    }],
+    grid:{
+        x2:80
+    }  
 };
 
 var accOption = {
@@ -55,7 +58,10 @@ var accOption = {
         type: 'line',
         smooth: true,
         data: []
-    }]
+    }],
+    grid:{
+        x2:80
+    }  
 };
 
 var lossChart = echarts.init(document.getElementById('loss-chart'));
@@ -179,7 +185,12 @@ function updateCarouselContent(task, model, dataset) {
 
     if (task != null) {
         for (var i = 0; i < subtitleTasks.length; i++) {
-            subtitleTasks[i].textContent = "已选择的任务类型：" + task;
+            if(task=="classification"){
+                subtitleTasks[i].textContent = "已选择的任务类型：分类任务" ;
+            }
+            else if(task=="detection"){
+                subtitleTasks[i].textContent = "已选择的任务类型：检测任务" ;
+            }
         }
 
     }
@@ -221,7 +232,11 @@ $(document).ready(function () {
                         for (var i = 0; i < data['cls'].length; i++) {
                             var option = document.createElement("option");
                             option.text = data['cls'][i];
-                            option.value = data['cls'][i];
+                            path = data['cls'][i];
+                            // replace / with \\
+                            path = path.replace(/\//g, '\\');
+                            // 设置为最后一个\\后面的字符串
+                            option.value = path.split('\\').pop();
                             dataSetSelect.appendChild(option);
                         }
                     }
@@ -231,7 +246,11 @@ $(document).ready(function () {
                         for (var i = 0; i < data['det'].length; i++) {
                             var option = document.createElement("option");
                             option.text = data['det'][i];
-                            option.value = data['det'][i];
+                            path = data['det'][i];
+                            // replace / with \\
+                            path = path.replace(/\//g, '\\');
+                            // 设置为最后一个\\后面的字符串
+                            option.value = path.split('\\').pop();
                             dataSetSelect.appendChild(option);
                         }
                     }

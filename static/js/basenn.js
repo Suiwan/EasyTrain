@@ -17,8 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 for (var i = 0; i < data.dataset.length; i++) {
                     var option = document.createElement("option");
                     option.text = data.dataset[i];
-                    // relpace \ with /
-                    // option.text = option.text.replace(/\\/g, "/");
+                    // option.value = data.dataset[i];
                     option.value = data.dataset[i];
                     datasetSelect.add(option);
                 }
@@ -585,7 +584,10 @@ function nextCarouselItem() {
             type: 'line',
             smooth: true,
             data: []
-        }]
+        }],
+        grid:{
+            x2:80
+        }  
     };
 
     var accOption = {
@@ -608,7 +610,10 @@ function nextCarouselItem() {
             type: 'line',
             smooth: true,
             data: []
-        }]
+        }],
+        grid:{
+            x2:80
+        }  
     };
 
 

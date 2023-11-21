@@ -94,13 +94,13 @@ def get_all_dataset():
     cls_dataset_list = os.listdir(cls_dataset_path)
     # 过滤掉非文件夹
     cls_dataset_list = [x for x in cls_dataset_list if os.path.isdir(cls_dataset_path + "\\" + x)]
-    res['cls'] = cls_dataset_list
+    res['cls'] = [os.path.join(cls_dataset_path,x) for x in cls_dataset_list]
     # 获取det文件夹下的所有文件夹
     det_dataset_path = back2pwd(__file__,4)  + "\\datasets\\mmedu_det"
     det_dataset_list = os.listdir(det_dataset_path)
     # 过滤掉非文件夹
     det_dataset_list = [x for x in det_dataset_list if os.path.isdir(det_dataset_path + "\\" + x)]  
-    res['det'] = det_dataset_list
+    res['det'] = [os.path.join(det_dataset_path,x) for x in det_dataset_list]
     # print("dataset_list",res)
     return res
 
