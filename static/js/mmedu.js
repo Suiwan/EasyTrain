@@ -89,6 +89,16 @@ document.addEventListener('DOMContentLoaded', function () {
     document.getElementById('task-submit-btn').addEventListener('click', function () {
         // 获取选中的任务类型
         var selectedTask = document.getElementById('task-select').value;
+
+        if(selectedTask=="classification"){
+            var task1 = document.getElementById('selectedTask')
+            task1.textContent = "已选择的任务类型：分类任务" ;
+        }
+        else if(selectedTask=="detection"){
+            var task1 = document.getElementById('selectedTask')
+            task1.textContent = "已选择的任务类型：检测任务" ;
+        }
+
         // 构建请求数据
         var requestData = {
             task: selectedTask
@@ -112,6 +122,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 console.error(error);
             });
         updateCarouselContent(selectedTask, null, null);
+
 
         if (selectedTask == 'classification') {
             var modelSelect = document.getElementById('model-select');
@@ -163,6 +174,7 @@ document.getElementById('model-submit-btn').addEventListener('click', function (
         .then(data => {
             // 处理成功响应
             console.log(data);
+
         })
         .catch(error => {
             // 处理错误
@@ -179,11 +191,17 @@ document.getElementById('model-submit-btn').addEventListener('click', function (
 // 更新轮播项的内容
 function updateCarouselContent(task, model, dataset) {
 
+
+
     var subtitleTasks = document.getElementsByClassName('subtitle-task');
     var subtitleModels = document.getElementsByClassName('subtitle-model');
     var subtitleDatasets = document.getElementsByClassName('subtitle-dataset');
 
     if (task != null) {
+
+
+
+
         for (var i = 0; i < subtitleTasks.length; i++) {
             if(task=="classification"){
                 subtitleTasks[i].textContent = "已选择的任务类型：分类任务" ;
