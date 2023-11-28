@@ -842,6 +842,7 @@ pretrainedModelSelect.addEventListener('change', function () {
 // 当点击设置其他参数
 document.getElementById('set-other-params-btn').addEventListener('click', function () {
     var pretrainedModelSelect = document.getElementById('pretrained-select');
+    pretrainedModelSelect.innerHTML = '';
     fetch('/mmedu/get_local_pretrained_model', {
         method: 'GET',
         headers: {

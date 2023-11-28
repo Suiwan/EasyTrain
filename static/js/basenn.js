@@ -56,12 +56,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.success) {
                     // 跳转到下一轮播页面
                     updateCarouselContent(dataset);
-                    $('#myCarousel').carousel('next');
                 }
                 else {
                     alert("数据集选择失败，请检查数据集是否正确！");
                 }
             });
+        $('#myCarousel').carousel('next');
     });
 
 
@@ -981,6 +981,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     document.getElementById('set-other-params-btn').addEventListener('click', function () {
         var pretrainedModelSelect = document.getElementById('pretrained-select');
+        pretrainedModelSelect.innerHTML = '';
         fetch('/basenn/get_local_pretrained_model', {
             method: 'GET',
             headers: {
