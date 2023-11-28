@@ -351,29 +351,29 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         console.log(layerInfoList);
 
-              // 检查输入维度是否为正整数
-              for (let i = 0; i < layerInfoList.length; i++) {
-                inputSize = parseInt(layerInfoList[i]['inputSize']);
-                if (!Number.isInteger(inputSize) || inputSize <= 0) {
-                    info = "第" + (i + 1) + "层的输入维度必须为正整数！";
-                    alert(info);
-                    return;
-                }
+        // 检查输入维度是否为正整数
+        for (let i = 0; i < layerInfoList.length; i++) {
+            inputSize = parseInt(layerInfoList[i]['inputSize']);
+            if (!Number.isInteger(inputSize) || inputSize <= 0) {
+                info = "第" + (i + 1) + "层的输入维度必须为正整数！";
+                alert(info);
+                return;
             }
+        }
 
-                   // 检查输出维度是否为正整数
-            for (let i = 0; i < layerInfoList.length; i++) {
-                outputSize = parseInt(layerInfoList[i]['outputSize']);
-                if (!Number.isInteger(outputSize) || outputSize <= 0) {
-                    info = "第" + (i + 1) + "层的输出维度必须为正整数！";
-                    alert(info);
-                    return;
-                }
+        // 检查输出维度是否为正整数
+        for (let i = 0; i < layerInfoList.length; i++) {
+            outputSize = parseInt(layerInfoList[i]['outputSize']);
+            if (!Number.isInteger(outputSize) || outputSize <= 0) {
+                info = "第" + (i + 1) + "层的输出维度必须为正整数！";
+                alert(info);
+                return;
             }
+        }
 
         // 检查输入和输出维度是否匹配
         for (let i = 0; i < layerInfoList.length - 1; i++) {
-            inputSize = parseInt(layerInfoList[i+1]['inputSize']);
+            inputSize = parseInt(layerInfoList[i + 1]['inputSize']);
             outputSize = parseInt(layerInfoList[i]['outputSize']);
             if (inputSize != outputSize) {
                 console.log(inputSize, outputSize);
@@ -507,14 +507,14 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // 函数：点击跳转到下一轮播项
-function nextCarouselItem() {
-    $('.carousel').carousel('next');
-}
+    function nextCarouselItem() {
+        $('.carousel').carousel('next');
+    }
 
-   // 给goto-train-btn绑定事件，点击跳转到训练页面
-   document.getElementById('goto-train-btn').addEventListener('click', function () {
-    nextCarouselItem();
-});
+    // 给goto-train-btn绑定事件，点击跳转到训练页面
+    document.getElementById('goto-train-btn').addEventListener('click', function () {
+        nextCarouselItem();
+    });
     // 点击复制代码到剪贴板
     $(function () { $("[data-toggle='tooltip']").tooltip(); });
     function copyCode2Clipboard() {
@@ -585,9 +585,9 @@ function nextCarouselItem() {
             smooth: true,
             data: []
         }],
-        grid:{
-            x2:80
-        }  
+        grid: {
+            x2: 80
+        }
     };
 
     var accOption = {
@@ -611,9 +611,9 @@ function nextCarouselItem() {
             smooth: true,
             data: []
         }],
-        grid:{
-            x2:80
-        }  
+        grid: {
+            x2: 80
+        }
     };
 
 
@@ -725,7 +725,7 @@ function nextCarouselItem() {
                     }
                     else if (epoch != currentEpoch) {
                         console.log("draw chart")
-    
+
                         var loss_sum = 0;
                         var acc_sum = 0;
                         // 求temp_loss temp_acc 的平均值
@@ -754,7 +754,7 @@ function nextCarouselItem() {
                     }
                 }
 
-                else if (data.includes("MAE")){
+                else if (data.includes("MAE")) {
                     var result = data_reg_mae.exec(data);
                     epoch = parseInt(result[1]); // 记得转换！！，否则计算时会有问题
                     loss = parseFloat(result[2]);
@@ -773,7 +773,7 @@ function nextCarouselItem() {
                     }
                     else if (epoch != currentEpoch) {
                         console.log("draw chart")
-    
+
                         var loss_sum = 0;
                         var acc_sum = 0;
                         // 求temp_loss temp_acc 的平均值
@@ -801,7 +801,7 @@ function nextCarouselItem() {
                         console.log(epoch, currentEpoch)
                     }
                 }
-                else if(data.includes("MSE")){
+                else if (data.includes("MSE")) {
                     var result = data_reg_mse.exec(data);
                     epoch = parseInt(result[1]); // 记得转换！！，否则计算时会有问题
                     loss = parseFloat(result[2]);
@@ -818,7 +818,7 @@ function nextCarouselItem() {
                     }
                     else if (epoch != currentEpoch) {
                         console.log("draw chart")
-    
+
                         var loss_sum = 0;
                         var acc_sum = 0;
                         // 求temp_loss temp_acc 的平均值
@@ -846,7 +846,7 @@ function nextCarouselItem() {
                         console.log(epoch, currentEpoch)
                     }
                 }
-          
+
             }
 
             // 当data出现类似保存模型D:\workspace\XEdu\EasyDL2.0\checkpoints\basenn_20231103_162909\basenn.pth成功！时
@@ -946,6 +946,27 @@ function nextCarouselItem() {
         option_custom.text = "自定义";
         option_custom.value = "custom";
         pretrainedModelSelect.appendChild(option_custom);
+        // 如果选择了自定义，就加入一个自定义的输入框
+        pretrainedModelSelect.addEventListener('change', function () {
+            var selectedPretrainedModel = pretrainedModelSelect.options[pretrainedModelSelect.selectedIndex].value;
+            if (selectedPretrainedModel == "custom") {
+                // 创建一个input
+                var input = document.createElement("input");
+                input.setAttribute("type", "text");
+                input.setAttribute("id", "custom-pretrained-model");
+                input.setAttribute("class", "form-control");
+                input.setAttribute("placeholder", "请输入预训练模型的绝对路径");
+                pretrainedModelSelect.parentNode.appendChild(input);
+            }
+            else {
+                // 删除input
+                var input = document.getElementById("custom-pretrained-model");
+                if (input != null) {
+                    input.parentNode.removeChild(input);
+                }
+            }
+        });
+
         fetch('/basenn/get_local_pretrained_model', {
             method: 'GET',
             headers: {
@@ -964,28 +985,9 @@ function nextCarouselItem() {
                     pretrainedModelSelect.appendChild(option);
                 }
 
-                // 如果选择了自定义，就加入一个自定义的输入框
-                pretrainedModelSelect.addEventListener('change', function () {
-                    var selectedPretrainedModel = pretrainedModelSelect.options[pretrainedModelSelect.selectedIndex].value;
-                    if (selectedPretrainedModel == "custom") {
-                        // 创建一个input
-                        var input = document.createElement("input");
-                        input.setAttribute("type", "text");
-                        input.setAttribute("id", "custom-pretrained-model");
-                        input.setAttribute("class", "form-control");
-                        input.setAttribute("placeholder", "请输入预训练模型的绝对路径");
-                        pretrainedModelSelect.parentNode.appendChild(input);
-                    }
-                    else {
-                        // 删除input
-                        var input = document.getElementById("custom-pretrained-model");
-                        if (input != null) {
-                            input.parentNode.removeChild(input);
-                        }
-                    }
-                });
-            })
-    });
+            });
+    })
+
 
 
     const steps = document.querySelectorAll('.step-basenn');
@@ -993,7 +995,7 @@ function nextCarouselItem() {
     steps.forEach((step) => {
         // 点击steps中的step-num 或者 step-text，跳转到对应的轮播项，index 为step-num的值-1
         step_text = step.getElementsByClassName('step-text')[0];
-        step_text.setAttribute("type","button")
+        step_text.setAttribute("type", "button")
         step_text.addEventListener('click', function () {
             var index = parseInt(step.getElementsByClassName('step-num')[0].textContent) - 1;
             console.log(index);
@@ -1001,7 +1003,7 @@ function nextCarouselItem() {
         });
 
         step_num = step.getElementsByClassName('step-num')[0];
-        step_num.setAttribute("type","button")
+        step_num.setAttribute("type", "button")
 
         step_num.addEventListener('click', function () {
             var index = parseInt(step.getElementsByClassName('step-num')[0].textContent) - 1;
@@ -1010,18 +1012,18 @@ function nextCarouselItem() {
         });
 
 
-        $(step_text).mouseover(function(){
-            $(this).css("color","#3778ce");
+        $(step_text).mouseover(function () {
+            $(this).css("color", "#3778ce");
         });
-        $(step_text).mouseout(function(){
-            $(this).css("color","white");
+        $(step_text).mouseout(function () {
+            $(this).css("color", "white");
         });
 
-        $(step_num).mouseover(function(){
-            $(step_text).css("color","#3778ce");
+        $(step_num).mouseover(function () {
+            $(step_text).css("color", "#3778ce");
         });
-        $(step_num).mouseout(function(){
-            $(step_text).css("color","white");
+        $(step_num).mouseout(function () {
+            $(step_text).css("color", "white");
         });
 
     });
@@ -1037,9 +1039,9 @@ function nextCarouselItem() {
         $('#trainFinishModal').modal('hide');
         $('#convertModal').modal('show');
     });
-    
+
     document.getElementById('convert-btn').addEventListener('click', function () {
-    
+
         // 显示转换中的模态框
         $('#convertModal').modal('hide');
         $('#convertLoadingModal').modal('show');
@@ -1072,5 +1074,5 @@ function nextCarouselItem() {
                     $('#convertFinishModal').modal('show');
                 }
             });
-        });
+    });
 });
